@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { toast } from '~/utils/util'
 import { getToken } from '~/utils/auth'
+import store from './store'
 
 const instance = axios.create({ baseURL: '/api' })
 // 添加请求拦截器
@@ -26,9 +27,13 @@ instance.interceptors.response.use(
         return response.data.data
     },
     function (error) {
+        const msg = error.response.data.msg || '网络错误'
         // 超出 2xx 范围的状态码都会触发该函数。
         // 对响应错误做点什么
-        toast(error.response.data.msg, 'error')
+        if (msg === '非法token，请先登录') {
+            store.dispatch('logout').finally(() => location.reload())
+        }
+        toast(msg, 'error')
         return Promise.reject(error)
     }
 )

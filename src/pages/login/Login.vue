@@ -92,7 +92,7 @@ const submit = () => {
             loading.value = true
             store
                 .dispatch('login', form)
-                .then(res => {
+                .then(() => {
                     // 提示登入成功
                     toast('登入成功', 'success')
                     // 跳转到首页

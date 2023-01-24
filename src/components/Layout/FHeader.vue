@@ -70,11 +70,13 @@ const {
     toggle
 } = useFullscreen()
 const drawer = ref(false)
+// 表单数据
 const form = reactive({
     oldpassword: '',
     password: '',
     repassword: ''
 })
+// 表单验证规则
 const rules = reactive({
     oldpassword: [
         {
@@ -116,12 +118,15 @@ const rules = reactive({
         }
     ]
 })
+// 刷新页面
 const handleRefresh = () => {
     location.reload()
 }
+// 全屏
 const handleFullScreen = () => {
     toggle()
 }
+// 下拉框内部选项事件
 const handleCommand = command => {
     switch (command) {
         case 'rePassword':
@@ -148,6 +153,7 @@ const handleCommand = command => {
 
 const loading = ref(false)
 const formRef = ref(null)
+// 修改密码
 const onSubmit = () => {
     formRef.value.validate(valid => {
         if (!valid) {
