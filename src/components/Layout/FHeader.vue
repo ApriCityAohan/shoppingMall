@@ -32,7 +32,7 @@
             </el-dropdown>
         </div>
     </div>
-    <el-drawer v-model="drawer" title="修改密码" size="45%" :close-on-click-modal="false">
+    <Drawer ref="drawerRef" title="修改密码" size="45%" :destroy-on-close="true" @submit="onSubmit">
         <el-form ref="formRef" :model="form" :rules="rules" label-width="80px">
             <el-form-item prop="oldpassword" label="旧密码">
                 <el-input v-model="form.oldpassword" placeholder="请输入旧密码" show-password>
@@ -46,17 +46,15 @@
                 <el-input v-model="form.repassword" placeholder="请确认新密码" show-password>
                 </el-input>
             </el-form-item>
-            <el-form-item>
-                <el-button type="primary" :loading="loading" @click="onSubmit">提交</el-button>
-            </el-form-item>
         </el-form>
-    </el-drawer>
+    </Drawer>
 </template>
 
 <script setup>
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import Drawer from '../Drawer.vue'
 import { logout, updatepassword } from '~/api/manager'
 import { showToastBox, toast } from '~/utils/util'
 import { useFullscreen } from '@vueuse/core'
@@ -69,7 +67,8 @@ const {
     isFullscreen,
     toggle
 } = useFullscreen()
-const drawer = ref(false)
+const drawerRef = ref(null)
+
 // 表单数据
 const form = reactive({
     oldpassword: '',
@@ -131,7 +130,7 @@ const handleCommand = command => {
     switch (command) {
         case 'rePassword':
             // console.log('修改密码')
-            drawer.value = true
+            drawerRef.value.open()
             break
         case 'exitLogin':
             showToastBox('是否要退出登入')
