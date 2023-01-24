@@ -33,15 +33,31 @@
         </div>
     </div>
     <el-drawer v-model="drawer" title="修改密码" size="45%" :close-on-click-modal="false">
-        <span>Hi there!</span>
+        <el-form ref="formRef" :model="form" :rules="rules" label-width="80px">
+            <el-form-item prop="oldpassword" label="旧密码">
+                <el-input v-model="form.oldpassword" placeholder="请输入旧密码" show-password>
+                </el-input>
+            </el-form-item>
+            <el-form-item prop="password" label="新密码">
+                <el-input v-model="form.password" placeholder="请输入新密码" show-password>
+                </el-input>
+            </el-form-item>
+            <el-form-item prop="repassword" label="确认密码">
+                <el-input v-model="form.repassword" placeholder="请确认新密码" show-password>
+                </el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" :loading="loading" @click="onSubmit">提交</el-button>
+            </el-form-item>
+        </el-form>
     </el-drawer>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { logout } from '~/api/manager'
+import { logout, updatepassword } from '~/api/manager'
 import { showToastBox, toast } from '~/utils/util'
 import { useFullscreen } from '@vueuse/core'
 import { ArrowDown, Shop, Fold, Refresh, FullScreen, Close } from '@element-plus/icons-vue'
@@ -54,7 +70,52 @@ const {
     toggle
 } = useFullscreen()
 const drawer = ref(false)
-
+const form = reactive({
+    oldpassword: '',
+    password: '',
+    repassword: ''
+})
+const rules = reactive({
+    oldpassword: [
+        {
+            required: true,
+            message: '请输入旧密码',
+            trigger: 'blur'
+        },
+        {
+            min: 3,
+            max: 12,
+            message: '长度在 3 到 12 个字符',
+            trigger: 'blur'
+        }
+    ],
+    password: [
+        {
+            required: true,
+            message: '请输入密码',
+            trigger: 'blur'
+        },
+        {
+            min: 5,
+            max: 23,
+            message: '长度在 5 到 23 个字符',
+            trigger: 'blur'
+        }
+    ],
+    repassword: [
+        {
+            required: true,
+            message: '请确认密码',
+            trigger: 'blur'
+        },
+        {
+            min: 5,
+            max: 23,
+            message: '长度在 5 到 23 个字符',
+            trigger: 'blur'
+        }
+    ]
+})
 const handleRefresh = () => {
     location.reload()
 }
@@ -83,6 +144,26 @@ const handleCommand = command => {
         default:
             break
     }
+}
+
+const loading = ref(false)
+const formRef = ref(null)
+const onSubmit = () => {
+    formRef.value.validate(valid => {
+        if (!valid) {
+            return false
+        }
+        loading.value = true
+        updatepassword(form)
+            .then(res => {
+                toast('修改密码成功')
+                store.dispatch('logout')
+                router.replace('/login')
+            })
+            .finally(() => {
+                loading.value = false
+            })
+    })
 }
 </script>
 
