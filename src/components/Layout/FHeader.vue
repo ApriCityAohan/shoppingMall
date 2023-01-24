@@ -133,7 +133,7 @@ const handleCommand = command => {
             drawerRef.value.open()
             break
         case 'exitLogin':
-            showToastBox('是否要退出登入')
+            showToastBox('是否要退出登入', '警告！')
                 .then(() => {
                     logout().then(() => {
                         store.dispatch('logout')
