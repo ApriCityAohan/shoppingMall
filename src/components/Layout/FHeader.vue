@@ -150,7 +150,6 @@ const handleCommand = command => {
     }
 }
 
-const loading = ref(false)
 const formRef = ref(null)
 // 修改密码
 const onSubmit = () => {
@@ -158,7 +157,7 @@ const onSubmit = () => {
         if (!valid) {
             return false
         }
-        loading.value = true
+        drawerRef.value.loadOn()
         updatepassword(form)
             .then(res => {
                 toast('修改密码成功')
@@ -166,7 +165,7 @@ const onSubmit = () => {
                 router.replace('/login')
             })
             .finally(() => {
-                loading.value = false
+                drawerRef.value.loadOff()
             })
     })
 }

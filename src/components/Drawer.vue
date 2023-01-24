@@ -12,7 +12,9 @@
                 <slot></slot>
             </div>
             <div class="btnGroup">
-                <el-button type="primary" @click="submit">{{ confirmText }}</el-button>
+                <el-button type="primary" :loading="loading" @click="submit">{{
+                    confirmText
+                }}</el-button>
                 <el-button @click="close">取消</el-button>
             </div>
         </div>
@@ -22,6 +24,9 @@
 <script setup>
 import { ref } from 'vue'
 const drawer = ref(false)
+const loading = ref(false)
+const loadOn = () => (loading.value = true)
+const loadOff = () => (loading.value = false)
 const open = () => (drawer.value = true)
 const close = () => (drawer.value = false)
 
@@ -48,7 +53,9 @@ const submit = () => emit('submit')
 
 defineExpose({
     open,
-    close
+    close,
+    loadOn,
+    loadOff
 })
 </script>
 
