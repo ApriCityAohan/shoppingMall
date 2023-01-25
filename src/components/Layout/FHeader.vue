@@ -69,6 +69,38 @@ const {
 } = useFullscreen()
 const drawerRef = ref(null)
 
+// 刷新页面
+const handleRefresh = () => {
+    location.reload()
+}
+// 全屏
+const handleFullScreen = () => {
+    toggle()
+}
+// 下拉框内部选项事件
+const handleCommand = command => {
+    switch (command) {
+        case 'rePassword':
+            // console.log('修改密码')
+            drawerRef.value.open()
+            break
+        case 'exitLogin':
+            showToastBox('是否要退出登入', '警告！')
+                .then(() => {
+                    logout().then(() => {
+                        store.dispatch('logout')
+                        toast('退出登入成功')
+                        router.push('/login')
+                    })
+                })
+                .catch(() => {
+                    console.log('取消退出登入')
+                })
+            break
+        default:
+            break
+    }
+}
 // 表单数据
 const form = reactive({
     oldpassword: '',
@@ -117,39 +149,6 @@ const rules = reactive({
         }
     ]
 })
-// 刷新页面
-const handleRefresh = () => {
-    location.reload()
-}
-// 全屏
-const handleFullScreen = () => {
-    toggle()
-}
-// 下拉框内部选项事件
-const handleCommand = command => {
-    switch (command) {
-        case 'rePassword':
-            // console.log('修改密码')
-            drawerRef.value.open()
-            break
-        case 'exitLogin':
-            showToastBox('是否要退出登入', '警告！')
-                .then(() => {
-                    logout().then(() => {
-                        store.dispatch('logout')
-                        toast('退出登入成功')
-                        router.push('/login')
-                    })
-                })
-                .catch(() => {
-                    console.log('取消退出登入')
-                })
-            break
-        default:
-            break
-    }
-}
-
 const formRef = ref(null)
 // 修改密码
 const onSubmit = () => {
