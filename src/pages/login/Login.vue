@@ -48,7 +48,6 @@
 import { reactive, ref, onMounted, onBeforeUnmount } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { User, Lock } from '@element-plus/icons-vue'
 import { toast } from '~/utils/util'
 const form = reactive({
     username: '',

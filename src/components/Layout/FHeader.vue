@@ -58,7 +58,6 @@ import Drawer from '../Drawer.vue'
 import { logout, updatepassword } from '~/api/manager'
 import { showToastBox, toast } from '~/utils/util'
 import { useFullscreen } from '@vueuse/core'
-import { ArrowDown, Shop, Fold, Refresh, FullScreen, Close } from '@element-plus/icons-vue'
 
 const router = useRouter()
 const store = useStore()
