@@ -11,6 +11,11 @@ const routes = [
                 path: '',
                 component: () => import('~/pages/home/Home.vue'),
                 meta: { title: '后台首页' }
+            },
+            {
+                path: '/goods/list',
+                component: () => import('~/pages/goods/List.vue'),
+                meta: { title: '商品管理' }
             }
         ]
     },
