@@ -1,6 +1,13 @@
 <template>
-    <div class="fMenu">
-        <el-menu class="border-0" default-active="/" @select="handleSelect">
+    <div class="fMenu" :style="{ width: $store.state.menuWidth }">
+        <el-menu
+            unique-opened
+            :collapse="isCollapse"
+            :collapse-transition="false"
+            class="border-0"
+            default-active="/"
+            @select="handleSelect"
+        >
             <template v-for="(item, index) in menuList" :key="index">
                 <el-sub-menu v-if="item.child && item.child.length > 0" :index="item.name">
                     <template #title>
@@ -30,8 +37,12 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 const router = useRouter()
+const store = useStore()
+const isCollapse = computed(() => !(store.state.menuWidth === '250px'))
 const menuList = [
     {
         id: 1,
@@ -68,10 +79,12 @@ const handleSelect = e => {
 
 <style scoped>
 .fMenu {
-    width: 250px;
+    transition: all 0.5s;
     top: 64px;
     left: 0;
     bottom: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
     @apply shadow-md fixed;
 }
 </style>

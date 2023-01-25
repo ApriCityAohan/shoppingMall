@@ -5,7 +5,7 @@
             <f-header></f-header>
         </el-header>
         <el-container>
-            <el-aside>
+            <el-aside class="asideMenu" :style="{ width: $store.state.menuWidth }">
                 <!-- Aside content -->
                 <f-menu></f-menu>
             </el-aside>
@@ -24,4 +24,8 @@ import FMenu from '~/components/Layout/FMenu.vue'
 import TabList from '~/components/Layout/TabList.vue'
 </script>
 
-<style scoped></style>
+<style scoped>
+.asideMenu {
+    transition: all 0.5s;
+}
+</style>

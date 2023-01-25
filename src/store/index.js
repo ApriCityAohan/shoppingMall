@@ -7,13 +7,18 @@ const store = createStore({
     state() {
         return {
             // 保存用户信息
-            user: {}
+            user: {},
+            // 侧边栏宽度
+            menuWidth: '250px'
         }
     },
     mutations: {
         // 修改用户信息
         SET_USER(state, user) {
             state.user = user
+        },
+        SET_MENU_WIDTH(state) {
+            state.menuWidth = state.menuWidth === '250px' ? '60px' : '250px'
         }
     },
     actions: {

@@ -4,7 +4,10 @@
             <el-icon class="mr-1"><Shop /></el-icon>
             雷雷商城管理平台
         </span>
-        <el-icon class="icon-style"><Fold /></el-icon>
+        <el-icon class="icon-style" @click="$store.commit('SET_MENU_WIDTH')">
+            <Fold v-if="$store.state.menuWidth === '250px'" />
+            <Expand v-else />
+        </el-icon>
         <el-tooltip effect="dark" content="刷新" placement="bottom">
             <el-icon class="icon-style" @click="handleRefresh"><Refresh /></el-icon>
         </el-tooltip>
