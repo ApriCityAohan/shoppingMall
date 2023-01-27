@@ -1,4 +1,4 @@
-import router from '~/router'
+import { router } from '~/router'
 import { getToken } from '~/utils/auth'
 import { toast, showLoading, hideLoading } from '~/utils/util'
 import store from './store'

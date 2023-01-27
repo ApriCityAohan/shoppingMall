@@ -5,7 +5,7 @@
             :collapse="isCollapse"
             :collapse-transition="false"
             class="border-0"
-            default-active="/"
+            :default-active="defaultActive"
             @select="handleSelect"
         >
             <template v-for="(item, index) in menuList" :key="index">
@@ -37,40 +37,15 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 const router = useRouter()
+const route = useRoute()
 const store = useStore()
+const defaultActive = ref(route.path)
 const isCollapse = computed(() => !(store.state.menuWidth === '250px'))
-const menuList = [
-    {
-        id: 1,
-        name: '后台面板',
-        icon: 'help',
-        child: [
-            {
-                id: 12,
-                name: '主控台',
-                icon: 'home-filled',
-                frontpath: '/'
-            }
-        ]
-    },
-    {
-        id: 2,
-        name: '商品管理',
-        icon: 'shopping-bag',
-        child: [
-            {
-                id: 22,
-                name: '商品管理',
-                icon: 'shopping-cart-full',
-                frontpath: '/goods/list'
-            }
-        ]
-    }
-]
+const menuList = computed(() => store.state.menus)
 const handleSelect = e => {
     console.log(e)
     router.push(e)
@@ -86,5 +61,8 @@ const handleSelect = e => {
     overflow-y: auto;
     overflow-x: hidden;
     @apply shadow-md fixed;
+}
+.fMenu::-webkit-scrollbar {
+    width: 0;
 }
 </style>

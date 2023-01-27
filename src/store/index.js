@@ -9,7 +9,9 @@ const store = createStore({
             // 保存用户信息
             user: {},
             // 侧边栏宽度
-            menuWidth: '250px'
+            menuWidth: '250px',
+            menus: [],
+            ruleNames: []
         }
     },
     mutations: {
@@ -19,6 +21,12 @@ const store = createStore({
         },
         SET_MENU_WIDTH(state) {
             state.menuWidth = state.menuWidth === '250px' ? '60px' : '250px'
+        },
+        SET_MENUS(state, menus) {
+            state.menus = menus
+        },
+        SET_RULE_NAMES(state, ruleNames) {
+            state.ruleNames = ruleNames
         }
     },
     actions: {
@@ -28,6 +36,8 @@ const store = createStore({
                 getInfo()
                     .then(res => {
                         commit('SET_USER', res)
+                        commit('SET_MENUS', res.menus)
+                        commit('SET_RULE_NAMES', res.ruleNames)
                         resolve(res)
                     })
                     .catch(err => reject(err))

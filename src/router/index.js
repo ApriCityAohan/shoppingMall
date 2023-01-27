@@ -8,7 +8,7 @@ const routes = [
         component: Index,
         children: [
             {
-                path: '',
+                path: '/',
                 component: () => import('~/pages/home/Home.vue'),
                 meta: { title: '后台首页' }
             },
@@ -22,8 +22,7 @@ const routes = [
     { path: '/login', name: 'Login', component: Login, meta: { title: '登入页' } },
     { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound, meta: { title: '404' } }
 ]
-const router = createRouter({
+export const router = createRouter({
     history: createWebHashHistory(),
     routes
 })
-export default router
