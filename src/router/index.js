@@ -13,7 +13,7 @@ const routes = [
 ]
 const routeVlaue = [
     {
-        path: '',
+        path: '/',
         name: '/',
         component: () => import('~/pages/home/Home.vue'),
         meta: { title: '后台首页' }
@@ -34,7 +34,7 @@ export function addRoutes(menus) {
     const findAddRoute = arr => {
         arr.forEach(i => {
             const item = routeVlaue.find(j => j.path === i.frontpath)
-            if (item && !router.hasRoute(item.name)) {
+            if (item && !router.hasRoute(item.path)) {
                 router.addRoute('admin', item)
                 hasNewRoute = true
             }
@@ -44,5 +44,6 @@ export function addRoutes(menus) {
         })
     }
     findAddRoute(menus)
+    console.log(router.getRoutes())
     return hasNewRoute
 }
