@@ -24,7 +24,7 @@
                         <el-icon>
                             <component :is="item2.icon"></component>
                         </el-icon>
-                        {{ item.name }}
+                        {{ item2.name }}
                     </el-menu-item>
                 </el-sub-menu>
                 <el-menu-item v-else :index="item.frontpath">

@@ -1,4 +1,4 @@
-import { router } from '~/router'
+import { router, addRoutes } from '~/router'
 import { getToken } from '~/utils/auth'
 import { toast, showLoading, hideLoading } from '~/utils/util'
 import store from './store'
@@ -17,12 +17,15 @@ router.beforeEach(async (to, from, next) => {
         toast('请勿重复登入', 'error')
         return next({ path: from.path ? from.path : '/' })
     }
+    let hasNewRoute = false
+    // 监测是否有token，有则获取用户信息
     if (token) {
-        await store.dispatch('getUserInfo')
+        const { menus } = await store.dispatch('getUserInfo')
+        hasNewRoute = addRoutes(menus)
     }
     const title = (to.meta.title ? to.meta.title : '') + ' - 雷雷商城管理系统'
     document.title = title
-    next()
+    hasNewRoute ? next(to.fullPath) : next()
 })
 // 全局后置守卫
 router.afterEach((to, from) => {
