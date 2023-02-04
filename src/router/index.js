@@ -23,6 +23,12 @@ const routeVlaue = [
         name: '/goods/list',
         component: () => import('~/pages/goods/List.vue'),
         meta: { title: '商品管理' }
+    },
+    {
+        path: '/category/list',
+        name: '/category/list',
+        component: () => import('~/pages/category/List.vue'),
+        meta: { title: '商品分类' }
     }
 ]
 export const router = createRouter({
@@ -44,6 +50,6 @@ export function addRoutes(menus) {
         })
     }
     findAddRoute(menus)
-    console.log(router.getRoutes())
+    // console.log(router.getRoutes())
     return hasNewRoute
 }
