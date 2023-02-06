@@ -57,7 +57,7 @@ export function useTabList() {
     }
     // 切换tab时跳转
     const changeTab = t => {
-        console.log(t)
+        // console.log(t)
         activeTab.value = t
         router.push({ path: t })
     }
