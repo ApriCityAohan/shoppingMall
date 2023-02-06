@@ -2,7 +2,7 @@ import { router, addRoutes } from '~/router'
 import { getToken } from '~/utils/auth'
 import { toast, showLoading, hideLoading } from '~/utils/util'
 import store from './store'
-
+let hasGetInfo = false
 router.beforeEach(async (to, from, next) => {
     // 显示全屏Loading
     showLoading()
@@ -19,8 +19,9 @@ router.beforeEach(async (to, from, next) => {
     }
     let hasNewRoute = false
     // 监测是否有token，有则获取用户信息
-    if (token) {
+    if (token && !hasGetInfo) {
         const { menus } = await store.dispatch('getUserInfo')
+        hasGetInfo = true
         hasNewRoute = addRoutes(menus)
     }
     const title = (to.meta.title ? to.meta.title : '') + ' - 雷雷商城管理系统'
