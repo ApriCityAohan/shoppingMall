@@ -60,7 +60,7 @@ const handleSelect = e => {
     bottom: 0;
     overflow-y: auto;
     overflow-x: hidden;
-    @apply shadow-md fixed;
+    @apply shadow-md fixed bg-white;
 }
 .fMenu::-webkit-scrollbar {
     width: 0;
