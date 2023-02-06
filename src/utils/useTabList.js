@@ -13,6 +13,7 @@ export function useTabList() {
             path: '/'
         }
     ])
+    // 初始化tabList
     function initTabList() {
         const tabs = cookies.get('tabList')
         if (tabs) {
@@ -20,6 +21,7 @@ export function useTabList() {
         }
     }
     initTabList()
+    // 添加tab
     function addTab(tab) {
         const index = tabList.value.findIndex(item => item.path === tab.path) === -1
         if (index) {
@@ -27,6 +29,7 @@ export function useTabList() {
         }
         cookies.set('tabList', tabList.value)
     }
+    // 监听路由变化并激活addTab
     onBeforeRouteUpdate((to, from) => {
         activeTab.value = to.path
         addTab({
@@ -34,6 +37,7 @@ export function useTabList() {
             path: to.path
         })
     })
+    // 删除tab
     const removeTab = t => {
         const tabs = tabList.value
         const active = activeTab.value
@@ -51,12 +55,13 @@ export function useTabList() {
         tabList.value = tabs.filter(tab => tab.path !== t)
         cookies.set('tabList', tabList.value)
     }
+    // 切换tab时跳转
     const changeTab = t => {
         console.log(t)
         activeTab.value = t
         router.push({ path: t })
     }
-
+    // 下拉框操作关闭tab
     const handleClose = command => {
         if (command === 'clearAll') {
             // 清空所有
