@@ -44,12 +44,14 @@
                 </el-card>
             </el-col>
         </el-row>
+        <IndexNav></IndexNav>
     </div>
 </template>
 <script setup>
 import { ref } from 'vue'
 import { getStatistics1 } from '~/api/index.js'
 import CountTo from '~/components/CountTo.vue'
+import IndexNav from '~/components/indexNav.vue'
 const panels = ref([])
 getStatistics1().then(res => {
     panels.value = res.panels
