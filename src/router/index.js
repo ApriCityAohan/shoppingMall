@@ -29,6 +29,48 @@ const routeVlaue = [
         name: '/category/list',
         component: () => import('~/pages/category/List.vue'),
         meta: { title: '商品分类' }
+    },
+    {
+        path: '/user/list',
+        name: '/user/list',
+        component: () => import('~/pages/user/List.vue'),
+        meta: { title: '用户列表' }
+    },
+    {
+        path: '/order/list',
+        name: '/order/list',
+        component: () => import('~/pages/order/List.vue'),
+        meta: { title: '订单列表' }
+    },
+    {
+        path: '/comment/list',
+        name: '/comment/list',
+        component: () => import('~/pages/comment/List.vue'),
+        meta: { title: '评价列表' }
+    },
+    {
+        path: '/image/list',
+        name: '/image/list',
+        component: () => import('~/pages/image/List.vue'),
+        meta: { title: '图库列表' }
+    },
+    {
+        path: '/notice/list',
+        name: '/notice/list',
+        component: () => import('~/pages/notice/List.vue'),
+        meta: { title: '公告列表' }
+    },
+    {
+        path: '/coupon/list',
+        name: '/coupon/list',
+        component: () => import('~/pages/coupon/List.vue'),
+        meta: { title: '优惠券列表' }
+    },
+    {
+        path: '/setting/base',
+        name: '/setting/base',
+        component: () => import('~/pages/setting/Base.vue'),
+        meta: { title: '设置列表' }
     }
 ]
 export const router = createRouter({
