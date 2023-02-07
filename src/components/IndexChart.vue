@@ -87,7 +87,9 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-    if (myChart) echarts.dispose()
+    if (myChart) {
+        myChart.dispose()
+    }
 })
 </script>
 
