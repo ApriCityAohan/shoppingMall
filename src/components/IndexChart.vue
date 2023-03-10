@@ -82,8 +82,10 @@ const el = ref(null)
 useResizeObserver(el, entries => myChart.resize())
 onMounted(() => {
     const chartDom = document.getElementById('chart')
-    myChart = echarts.init(chartDom)
-    getData()
+    if (chartDom) {
+        myChart = echarts.init(chartDom)
+        getData()
+    }
 })
 
 onBeforeUnmount(() => {

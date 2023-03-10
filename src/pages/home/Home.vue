@@ -47,7 +47,7 @@
         <IndexNav></IndexNav>
         <el-row :gutter="20" class="mt-5">
             <el-col :span="12" :offset="0">
-                <IndexChart></IndexChart>
+                <IndexChart v-permission="['getStatistics3,GET']"></IndexChart>
             </el-col>
             <el-col :span="12" :offset="0">
                 <IndexCard

@@ -10,7 +10,7 @@ import { router } from './router'
 import store from './store'
 import './permission'
 import 'nprogress/nprogress.css'
-
+import permission from '~/directive/permission.js'
 const app = createApp(App)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
@@ -20,4 +20,5 @@ app.use(router)
     .use(ElementPlus, {
         locale: zhCn
     })
+    .use(permission)
     .mount('#app')
