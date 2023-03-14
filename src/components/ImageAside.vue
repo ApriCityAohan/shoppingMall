@@ -5,7 +5,16 @@
                 {{ item.name }}
             </ImgAsideList>
         </div>
-        <div class="bottom">分页</div>
+        <div class="bottom">
+            <el-pagination
+                v-model:current-page="currentPage"
+                background
+                layout="prev, next"
+                :total="total"
+                :page-size="limit"
+                @current-change="getList"
+            />
+        </div>
     </el-aside>
 </template>
 
@@ -13,16 +22,25 @@
 import { ref } from 'vue'
 import { getImagesClass } from '~/api/image_class.js'
 import ImgAsideList from './ImgAsideList.vue'
-
+// 状态
 const loading = ref(false)
 const list = ref([])
 const activeId = ref(0)
-function getList(page = 1) {
+// 页码
+const currentPage = ref(1)
+const total = ref(0)
+const limit = ref(10)
+// 获取图片分类列表
+function getList(page = null) {
+    if (typeof page === 'number') {
+        currentPage.value = page
+    }
     loading.value = true
-    getImagesClass(page)
+    getImagesClass(currentPage.value)
         .then(res => {
-            console.log(res.list)
+            // console.log(res)
             list.value = res.list
+            total.value = res.totalCount
             const item = list.value[0]
             if (item) {
                 activeId.value = item.id
@@ -54,5 +72,6 @@ getList()
     left: 0;
     right: 0;
     height: 40px;
+    @apply flex justify-center items-center;
 }
 </style>
