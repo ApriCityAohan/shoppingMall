@@ -1,13 +1,16 @@
 <template>
     <el-aside width="220px" class="image-aside">
         <div class="top">
-            <div v-for="i in 100" :key="i">i</div>
+            <ImgAsideList active> 分类标题 </ImgAsideList>
+            <ImgAsideList> 分类标题 </ImgAsideList>
         </div>
         <div class="bottom">分页</div>
     </el-aside>
 </template>
 
-<script setup></script>
+<script setup>
+import ImgAsideList from './ImgAsideList.vue'
+</script>
 
 <style scoped>
 .image-aside {

@@ -10,7 +10,7 @@
 
 <script setup>
 import ImageAside from '~/components/ImageAside.vue'
-import ImageMain from '~/components/ImageMian.vue'
+import ImageMain from '~/components/ImageMain.vue'
 const windowHeight = window.innerHeight || document.body.clientHeight
 const h = windowHeight - 64 - 44 - 40
 </script>
