@@ -1,11 +1,11 @@
 <template>
     <div class="aside-list" :class="{ active: active }">
         <span><slot></slot></span>
-        <el-button class="ml-auto" type="text" :size="12" @click="$emit('edit')">
-            <el-icon><Edit /></el-icon>
+        <el-button class="ml-auto px-1" text type="primary" size="small" @click="$emit('edit')">
+            <el-icon :size="16"><Edit /></el-icon>
         </el-button>
-        <el-button type="text" :size="12" @click="$emit('delete')">
-            <el-icon><Close /></el-icon>
+        <el-button class="px-1" text type="primary" size="small" @click="$emit('delete')">
+            <el-icon :size="16"><Close /></el-icon>
         </el-button>
     </div>
 </template>
