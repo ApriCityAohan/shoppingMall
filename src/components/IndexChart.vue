@@ -25,7 +25,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import * as echarts from 'echarts'
 import { useResizeObserver } from '@vueuse/core'
 import { getStatistics3 } from '~/api/index.js'
-
+// 标签初始值
 const current = ref('week')
 const options = [
     {
@@ -41,11 +41,14 @@ const options = [
         value: 'hour'
     }
 ]
+// 标签点击事件
 const handleChoose = type => {
     current.value = type
     getData()
 }
+// 获取数据
 function getData() {
+    // Chart 数据
     const option = {
         xAxis: {
             type: 'category',
@@ -65,7 +68,9 @@ function getData() {
             }
         ]
     }
+    // 显示加载动画
     myChart.showLoading()
+    // 获取数据
     getStatistics3(current.value)
         .then(res => {
             // console.log(res)
@@ -77,9 +82,12 @@ function getData() {
             myChart.hideLoading()
         })
 }
+// 初始化图表
 let myChart
 const el = ref(null)
+// 监听el的变化触发Chart重绘
 useResizeObserver(el, entries => myChart.resize())
+// 在挂载之后初始化图表
 onMounted(() => {
     const chartDom = document.getElementById('chart')
     if (chartDom) {
@@ -87,7 +95,7 @@ onMounted(() => {
         getData()
     }
 })
-
+// 在卸载之前销毁图表
 onBeforeUnmount(() => {
     if (myChart) {
         myChart.dispose()

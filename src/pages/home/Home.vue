@@ -68,11 +68,14 @@ import CountTo from '~/components/CountTo.vue'
 import IndexNav from '~/components/indexNav.vue'
 import IndexChart from '~/components/IndexChart.vue'
 import IndexCard from '~/components/IndexCard.vue'
+// 数值展示状态
 const panels = ref([])
+// 获取数值数据
 getStatistics1().then(res => {
     panels.value = res.panels
     console.log(panels.value)
 })
+// 店铺及商品数量展示
 const goods = ref([])
 const order = ref([])
 getStatistics2().then(res => {

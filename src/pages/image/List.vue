@@ -11,7 +11,9 @@
 <script setup>
 import ImageAside from '~/components/ImageAside.vue'
 import ImageMain from '~/components/ImageMain.vue'
+// 获取窗口高度
 const windowHeight = window.innerHeight || document.body.clientHeight
+// 计算高度
 const h = windowHeight - 64 - 44 - 40
 </script>
 

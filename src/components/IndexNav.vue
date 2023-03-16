@@ -15,6 +15,7 @@
 </template>
 
 <script setup>
+// 导航数据
 const iconNavs = [
     {
         icon: 'user',

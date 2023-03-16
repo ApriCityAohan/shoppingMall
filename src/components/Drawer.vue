@@ -23,8 +23,10 @@
 
 <script setup>
 import { ref } from 'vue'
+// 状态
 const drawer = ref(false)
 const loading = ref(false)
+// 修改状态方法
 const loadOn = () => (loading.value = true)
 const loadOff = () => (loading.value = false)
 const open = () => (drawer.value = true)
@@ -50,7 +52,7 @@ const props = defineProps({
 
 const emit = defineEmits(['submit'])
 const submit = () => emit('submit')
-
+// 把方法暴露给父组件
 defineExpose({
     open,
     close,

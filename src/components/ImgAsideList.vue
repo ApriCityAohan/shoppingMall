@@ -11,12 +11,14 @@
 </template>
 
 <script setup>
+// props
 defineProps({
     active: {
         type: Boolean,
         default: false
     }
 })
+// 暴露事件
 defineEmits(['edit', 'delete'])
 </script>
 

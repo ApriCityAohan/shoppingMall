@@ -20,6 +20,7 @@
 </template>
 
 <script setup>
+// Props传入的数据
 defineProps({
     title: {
         type: String,
