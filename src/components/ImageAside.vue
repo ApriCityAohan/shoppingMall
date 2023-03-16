@@ -16,12 +16,14 @@
             />
         </div>
     </el-aside>
+    <Drawer ref="drawerRef" title="新增" @submit="handleSubmit"></Drawer>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { getImagesClass } from '~/api/image_class.js'
 import ImgAsideList from './ImgAsideList.vue'
+import Drawer from './Drawer.vue'
 // 状态
 const loading = ref(false)
 const list = ref([])
@@ -51,6 +53,16 @@ function getList(page = null) {
         })
 }
 getList()
+const drawerRef = ref(null)
+const handleOpenDrawer = () => {
+    drawerRef.value.open()
+}
+const handleSubmit = () => {
+    console.log('提交成功')
+}
+defineExpose({
+    handleOpenDrawer
+})
 </script>
 
 <style scoped>
