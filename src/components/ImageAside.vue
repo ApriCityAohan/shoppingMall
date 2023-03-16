@@ -16,11 +16,20 @@
             />
         </div>
     </el-aside>
-    <Drawer ref="drawerRef" title="新增" @submit="handleSubmit"></Drawer>
+    <Drawer ref="drawerRef" title="新增" @submit="handleSubmit">
+        <el-form ref="formRef" :model="form" :rules="rules" label-width="80px">
+            <el-form-item label="分类标题" prop="name">
+                <el-input v-model="form.name"></el-input>
+            </el-form-item>
+            <el-form-item label="排序">
+                <el-input-number v-model="form.num" :min="1" :max="1000" />
+            </el-form-item>
+        </el-form>
+    </Drawer>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { getImagesClass } from '~/api/image_class.js'
 import ImgAsideList from './ImgAsideList.vue'
 import Drawer from './Drawer.vue'
@@ -53,12 +62,29 @@ function getList(page = null) {
         })
 }
 getList()
+// 抽屉Ref
 const drawerRef = ref(null)
+// 打开抽屉
 const handleOpenDrawer = () => {
     drawerRef.value.open()
 }
+// 表单
+const form = reactive({
+    name: '',
+    num: 50
+})
+// 规则
+const rules = reactive({
+    name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }]
+})
+const formRef = ref(null)
 const handleSubmit = () => {
-    console.log('提交成功')
+    formRef.value.validate(valid => {
+        if (!valid) {
+            return false
+        }
+        console.log('提交成功', form)
+    })
 }
 defineExpose({
     handleOpenDrawer
