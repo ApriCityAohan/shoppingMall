@@ -30,9 +30,10 @@
 
 <script setup>
 import { ref, reactive } from 'vue'
-import { getImagesClass } from '~/api/image_class.js'
+import { getImagesClass, createImageClass } from '~/api/image_class.js'
 import ImgAsideList from './ImgAsideList.vue'
 import Drawer from './Drawer.vue'
+import { toast } from '~/utils/util.js'
 // 状态
 const loading = ref(false)
 const list = ref([])
@@ -80,10 +81,18 @@ const rules = reactive({
 const formRef = ref(null)
 const handleSubmit = () => {
     formRef.value.validate(valid => {
-        if (!valid) {
-            return false
-        }
-        console.log('提交成功', form)
+        if (!valid) return false
+        drawerRef.value.loadOn()
+        createImageClass(form)
+            .then(res => {
+                toast('提交成功')
+                getList(1)
+                drawerRef.value.close()
+            })
+            .finally(() => {
+                drawerRef.value.loadOff()
+            })
+        // console.log('提交成功', form)
     })
 }
 defineExpose({
