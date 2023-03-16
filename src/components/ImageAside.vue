@@ -22,7 +22,7 @@
                 <el-input v-model="form.name"></el-input>
             </el-form-item>
             <el-form-item label="排序">
-                <el-input-number v-model="form.num" :min="1" :max="1000" />
+                <el-input-number v-model="form.order" :min="1" :max="1000" />
             </el-form-item>
         </el-form>
     </Drawer>
@@ -71,7 +71,7 @@ const handleOpenDrawer = () => {
 // 表单
 const form = reactive({
     name: '',
-    num: 50
+    order: 50
 })
 // 规则
 const rules = reactive({

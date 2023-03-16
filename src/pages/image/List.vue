@@ -1,7 +1,7 @@
 <template>
     <el-container class="bg-white rounded" :style="{ height: h + 'px' }">
         <el-header class="image-header">
-            <el-button type="primary" size="default" @click="handleAdd">新增图片分类</el-button>
+            <el-button type="primary" size="small" @click="handleAdd">新增图片分类</el-button>
         </el-header>
         <el-container>
             <ImageAside ref="handleOpenDrawer" />
