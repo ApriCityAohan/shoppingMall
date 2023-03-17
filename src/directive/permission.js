@@ -1,6 +1,6 @@
 import store from '~/store/index.js'
 function hasPermission(el, value) {
-    console.log(value)
+    // console.log(value)
     if (!Array.isArray(value)) {
         throw new Error('需要配置权限')
     }

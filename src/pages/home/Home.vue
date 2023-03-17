@@ -73,13 +73,13 @@ const panels = ref([])
 // 获取数值数据
 getStatistics1().then(res => {
     panels.value = res.panels
-    console.log(panels.value)
+    // console.log(panels.value)
 })
 // 店铺及商品数量展示
 const goods = ref([])
 const order = ref([])
 getStatistics2().then(res => {
-    console.log(res)
+    // console.log(res)
     goods.value = res.goods
     order.value = res.order
 })

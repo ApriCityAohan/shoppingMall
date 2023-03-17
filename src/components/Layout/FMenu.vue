@@ -47,7 +47,6 @@ const defaultActive = ref(route.path)
 const isCollapse = computed(() => !(store.state.menuWidth === '250px'))
 const menuList = computed(() => store.state.menus)
 const handleSelect = e => {
-    console.log(e)
     router.push(e)
 }
 </script>
