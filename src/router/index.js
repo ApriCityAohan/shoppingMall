@@ -92,6 +92,6 @@ export function addRoutes(menus) {
         })
     }
     findAddRoute(menus)
-    console.log(router.getRoutes())
+    // console.log(router.getRoutes())
     return hasNewRoute
 }
