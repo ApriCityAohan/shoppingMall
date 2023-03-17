@@ -6,6 +6,7 @@
                 :key="index"
                 :active="activeId === item.id"
                 @edit="handleEdit(item)"
+                @delete="handleDelete(item.id)"
             >
                 {{ item.name }}
             </ImgAsideList>
@@ -35,7 +36,12 @@
 
 <script setup>
 import { ref, reactive, computed } from 'vue'
-import { getImagesClass, createImageClass, updateImageClass } from '~/api/image_class.js'
+import {
+    getImagesClass,
+    createImageClass,
+    updateImageClass,
+    deleteImageClass
+} from '~/api/image_class.js'
 import ImgAsideList from './ImgAsideList.vue'
 import Drawer from './Drawer.vue'
 import { toast } from '~/utils/util.js'
@@ -116,6 +122,17 @@ const handleSubmit = () => {
         })
         // console.log('提交成功', form)
     })
+}
+const handleDelete = id => {
+    loading.value = true
+    deleteImageClass(id)
+        .then(res => {
+            toast('删除成功')
+            getList(currentPage.value)
+        })
+        .finally(() => {
+            loading.value = false
+        })
 }
 defineExpose({
     handleOpenDrawer
