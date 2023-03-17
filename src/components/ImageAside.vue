@@ -120,7 +120,6 @@ const handleSubmit = () => {
         }).finally(() => {
             drawerRef.value.loadOff()
         })
-        // console.log('提交成功', form)
     })
 }
 const handleDelete = id => {
