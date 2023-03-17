@@ -1,7 +1,12 @@
 <template>
     <el-aside v-loading="loading" width="220px" class="image-aside">
         <div class="top">
-            <ImgAsideList v-for="(item, index) in list" :key="index" :active="activeId === item.id">
+            <ImgAsideList
+                v-for="(item, index) in list"
+                :key="index"
+                :active="activeId === item.id"
+                @edit="handleEdit(item)"
+            >
                 {{ item.name }}
             </ImgAsideList>
         </div>
@@ -16,7 +21,7 @@
             />
         </div>
     </el-aside>
-    <Drawer ref="drawerRef" title="新增" @submit="handleSubmit">
+    <Drawer ref="drawerRef" :title="drawerTitle" @submit="handleSubmit">
         <el-form ref="formRef" :model="form" :rules="rules" label-width="80px">
             <el-form-item label="分类标题" prop="name">
                 <el-input v-model="form.name"></el-input>
@@ -29,8 +34,8 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
-import { getImagesClass, createImageClass } from '~/api/image_class.js'
+import { ref, reactive, computed } from 'vue'
+import { getImagesClass, createImageClass, updateImageClass } from '~/api/image_class.js'
 import ImgAsideList from './ImgAsideList.vue'
 import Drawer from './Drawer.vue'
 import { toast } from '~/utils/util.js'
@@ -42,6 +47,14 @@ const activeId = ref(0)
 const currentPage = ref(1)
 const total = ref(0)
 const limit = ref(10)
+// 抽屉Ref
+const drawerRef = ref(null)
+// 分类ID
+const classID = ref(0)
+// 抽屉标题
+const drawerTitle = computed(() => {
+    return classID.value === 0 ? '新增' : '编辑'
+})
 // 获取图片分类列表
 function getList(page = null) {
     if (typeof page === 'number') {
@@ -63,12 +76,6 @@ function getList(page = null) {
         })
 }
 getList()
-// 抽屉Ref
-const drawerRef = ref(null)
-// 打开抽屉
-const handleOpenDrawer = () => {
-    drawerRef.value.open()
-}
 // 表单
 const form = reactive({
     name: '',
@@ -79,19 +86,34 @@ const rules = reactive({
     name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }]
 })
 const formRef = ref(null)
+// 打开抽屉
+const handleOpenDrawer = () => {
+    classID.value = 0
+    form.name = ''
+    form.order = 50
+    drawerRef.value.open()
+}
+// 编辑
+const handleEdit = row => {
+    console.log(row)
+    classID.value = row.id
+    form.name = row.name
+    form.order = row.order
+    drawerRef.value.open()
+}
 const handleSubmit = () => {
     formRef.value.validate(valid => {
         if (!valid) return false
         drawerRef.value.loadOn()
-        createImageClass(form)
-            .then(res => {
-                toast('提交成功')
-                getList(1)
-                drawerRef.value.close()
-            })
-            .finally(() => {
-                drawerRef.value.loadOff()
-            })
+        const fun =
+            classID.value === 0 ? createImageClass(form) : updateImageClass(classID.value, form)
+        fun.then(res => {
+            toast(drawerTitle.value + '成功')
+            getList(classID.value === 0 ? 1 : currentPage.value)
+            drawerRef.value.close()
+        }).finally(() => {
+            drawerRef.value.loadOff()
+        })
         // console.log('提交成功', form)
     })
 }
