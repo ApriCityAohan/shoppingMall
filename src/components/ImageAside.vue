@@ -101,22 +101,25 @@ const handleOpenDrawer = () => {
     form.order = 50
     drawerRef.value.open()
 }
-// 编辑
+// 编辑分类
 const handleEdit = row => {
-    console.log(row)
+    // console.log(row)
     classID.value = row.id
     form.name = row.name
     form.order = row.order
     drawerRef.value.open()
 }
+// 提交表单
 const handleSubmit = () => {
     formRef.value.validate(valid => {
         if (!valid) return false
         drawerRef.value.loadOn()
+        // 当前分类ID为0时，新增分类API，否则为编辑分类API
         const fun =
             classID.value === 0 ? createImageClass(form) : updateImageClass(classID.value, form)
         fun.then(res => {
             toast(drawerTitle.value + '成功')
+            // 重新获取列表，当分类ID为0时，获取第一页列表，否则获取当前页列表
             getList(classID.value === 0 ? 1 : currentPage.value)
             drawerRef.value.close()
         }).finally(() => {
@@ -124,6 +127,7 @@ const handleSubmit = () => {
         })
     })
 }
+// 删除分类
 const handleDelete = id => {
     loading.value = true
     deleteImageClass(id)
@@ -135,11 +139,15 @@ const handleDelete = id => {
             loading.value = false
         })
 }
+// 发射事件
 const emit = defineEmits(['change'])
+// 改变激活ID
 function changeActiveId(id) {
     activeId.value = id
+    // 触发事件
     emit('change', id)
 }
+// 对外暴露方法
 defineExpose({
     handleOpenDrawer
 })

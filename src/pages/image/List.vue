@@ -18,14 +18,17 @@ import ImageMain from '~/components/ImageMain.vue'
 const windowHeight = window.innerHeight || document.body.clientHeight
 // 计算高度
 const h = windowHeight - 64 - 44 - 40
-
+// 抽屉Ref
 const handleOpenDrawer = ref(null)
+// 打开抽屉方法
 const handleAdd = () => {
     handleOpenDrawer.value.handleOpenDrawer()
 }
+// 图片列表Ref
 const handleImageRef = ref(null)
+// 切换图片分类
 const handleChange = id => {
-    // console.log(id)
+    // 当切换事件触发后，触发图片列表的加载数据方法
     handleImageRef.value.loadData(id)
 }
 </script>

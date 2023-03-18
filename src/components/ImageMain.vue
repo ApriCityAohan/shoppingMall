@@ -37,16 +37,17 @@
 <script setup>
 import { ref } from 'vue'
 import { getImageList } from '~/api/image.js'
-
+// 图片ID
 const imageClassId = ref(0)
+// 页码状态
 const currentPage = ref(1)
 const total = ref(0)
 const limit = ref(10)
-
+// 加载状态
 const loading = ref(false)
-
+// 图片列表
 const list = ref([])
-
+// 加载图片列表
 function getList(page = null) {
     if (typeof page === 'number') {
         currentPage.value = page
@@ -62,11 +63,13 @@ function getList(page = null) {
             loading.value = false
         })
 }
+// 加载数据
 function loadData(id) {
     imageClassId.value = id
     currentPage.value = 1
     getList()
 }
+// 暴露方法
 defineExpose({
     loadData
 })
