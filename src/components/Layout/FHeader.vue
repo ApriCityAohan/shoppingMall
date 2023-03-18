@@ -188,7 +188,7 @@ const onSubmit = () => {
     height: 64px;
 }
 .header .dropdown {
-    @apply px-2 flex justify-center items-center cursor-pointer hover:bg-indigo-600;
+    @apply px-2 flex justify-center items-center cursor-pointer mx-3;
     width: 100px;
     height: 64px;
 }
