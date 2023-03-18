@@ -4,8 +4,8 @@
             <el-button type="primary" size="small" @click="handleAdd">新增图片分类</el-button>
         </el-header>
         <el-container>
-            <ImageAside ref="handleOpenDrawer" />
-            <ImageMain />
+            <ImageAside ref="handleOpenDrawer" @change="handleChange" />
+            <ImageMain ref="handleImageRef" />
         </el-container>
     </el-container>
 </template>
@@ -22,6 +22,11 @@ const h = windowHeight - 64 - 44 - 40
 const handleOpenDrawer = ref(null)
 const handleAdd = () => {
     handleOpenDrawer.value.handleOpenDrawer()
+}
+const handleImageRef = ref(null)
+const handleChange = id => {
+    // console.log(id)
+    handleImageRef.value.loadData(id)
 }
 </script>
 

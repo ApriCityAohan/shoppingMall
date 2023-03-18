@@ -7,6 +7,7 @@
                 :active="activeId === item.id"
                 @edit="handleEdit(item)"
                 @delete="handleDelete(item.id)"
+                @click="changeActiveId(item.id)"
             >
                 {{ item.name }}
             </ImgAsideList>
@@ -48,6 +49,7 @@ import { toast } from '~/utils/util.js'
 // 状态
 const loading = ref(false)
 const list = ref([])
+// 激活ID
 const activeId = ref(0)
 // 页码
 const currentPage = ref(1)
@@ -74,7 +76,7 @@ function getList(page = null) {
             total.value = res.totalCount
             const item = list.value[0]
             if (item) {
-                activeId.value = item.id
+                changeActiveId(item.id)
             }
         })
         .finally(() => {
@@ -132,6 +134,11 @@ const handleDelete = id => {
         .finally(() => {
             loading.value = false
         })
+}
+const emit = defineEmits(['change'])
+function changeActiveId(id) {
+    activeId.value = id
+    emit('change', id)
 }
 defineExpose({
     handleOpenDrawer
