@@ -14,7 +14,9 @@
                         ></el-image>
                         <div class="image-title">{{ item.name }}</div>
                         <div class="flex items-center justify-center p-2">
-                            <el-button type="primary" size="small" text>重命名</el-button>
+                            <el-button type="primary" size="small" text @click="handleRename(item)"
+                                >重命名</el-button
+                            >
                             <el-button type="primary" size="small" text>删除</el-button>
                         </div>
                     </el-card>
@@ -36,7 +38,8 @@
 
 <script setup>
 import { ref } from 'vue'
-import { getImageList } from '~/api/image.js'
+import { getImageList, updateImage } from '~/api/image.js'
+import { showPrompt, toast } from '~/utils/util.js'
 // 图片ID
 const imageClassId = ref(0)
 // 页码状态
@@ -68,6 +71,22 @@ function loadData(id) {
     imageClassId.value = id
     currentPage.value = 1
     getList()
+}
+
+const handleRename = item => {
+    showPrompt('重命名', item.name)
+        .then(({ value }) => {
+            loading.value = true
+            updateImage(item.id, value)
+                .then(() => {
+                    toast('重命名成功')
+                    getList()
+                })
+                .finally(() => {
+                    loading.value = false
+                })
+        })
+        .catch(() => {})
 }
 // 暴露方法
 defineExpose({

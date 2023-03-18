@@ -25,3 +25,11 @@ export function showLoading() {
 export function hideLoading() {
     nprogress.done()
 }
+
+export function showPrompt(title, value = '') {
+    return ElMessageBox.prompt(title, '', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputValue: value
+    })
+}
