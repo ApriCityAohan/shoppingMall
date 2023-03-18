@@ -17,7 +17,16 @@
                             <el-button type="primary" size="small" text @click="handleRename(item)"
                                 >重命名</el-button
                             >
-                            <el-button type="primary" size="small" text>删除</el-button>
+                            <el-popconfirm
+                                title="确认是否删除图片?"
+                                confirm-button-text="确认"
+                                cancel-button-text="取消"
+                                @confirm="handleDelete(item.id)"
+                            >
+                                <template #reference>
+                                    <el-button type="primary" size="small" text>删除</el-button>
+                                </template>
+                            </el-popconfirm>
                         </div>
                     </el-card>
                 </el-col>
@@ -38,7 +47,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { getImageList, updateImage } from '~/api/image.js'
+import { getImageList, updateImage, deleteImage } from '~/api/image.js'
 import { showPrompt, toast } from '~/utils/util.js'
 // 图片ID
 const imageClassId = ref(0)
@@ -87,6 +96,18 @@ const handleRename = item => {
                 })
         })
         .catch(() => {})
+}
+// 删除方法
+const handleDelete = id => {
+    loading.value = true
+    deleteImage([id])
+        .then(() => {
+            toast('删除成功')
+            getList()
+        })
+        .finally(() => {
+            loading.value = false
+        })
 }
 // 暴露方法
 defineExpose({
