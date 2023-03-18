@@ -72,7 +72,7 @@ function loadData(id) {
     currentPage.value = 1
     getList()
 }
-
+// 重命名方法
 const handleRename = item => {
     showPrompt('重命名', item.name)
         .then(({ value }) => {

@@ -25,7 +25,7 @@ export function showLoading() {
 export function hideLoading() {
     nprogress.done()
 }
-
+// 显示输入框
 export function showPrompt(title, value = '') {
     return ElMessageBox.prompt(title, '', {
         confirmButtonText: '确定',
