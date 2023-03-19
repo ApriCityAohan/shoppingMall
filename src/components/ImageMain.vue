@@ -44,7 +44,10 @@
         </div>
     </el-main>
     <el-drawer v-model="drawer" title="上传图片">
-        <UploadField></UploadField>
+        <UploadField
+            :data="{ image_class_id: imageClassId }"
+            @success="handleSuccess"
+        ></UploadField>
     </el-drawer>
 </template>
 
@@ -119,6 +122,10 @@ const handleDelete = id => {
         .finally(() => {
             loading.value = false
         })
+}
+// 上传成功
+const handleSuccess = () => {
+    getList(1)
 }
 // 暴露方法
 defineExpose({
