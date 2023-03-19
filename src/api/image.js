@@ -6,5 +6,5 @@ export function updateImage(id, name) {
     return axios.post(`/admin/image/${id}`, { name })
 }
 export function deleteImage(ids) {
-    return axios.get(`/admin/image/delete_all`, { ids })
+    return axios.post(`/admin/image/delete_all`, { ids })
 }
