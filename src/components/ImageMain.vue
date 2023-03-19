@@ -43,12 +43,16 @@
             />
         </div>
     </el-main>
+    <el-drawer v-model="drawer" title="上传图片">
+        <UploadField></UploadField>
+    </el-drawer>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { getImageList, updateImage, deleteImage } from '~/api/image.js'
 import { showPrompt, toast } from '~/utils/util.js'
+import UploadField from '~/components/UploadField.vue'
 // 图片ID
 const imageClassId = ref(0)
 // 页码状态
@@ -59,6 +63,13 @@ const limit = ref(10)
 const loading = ref(false)
 // 图片列表
 const list = ref([])
+
+// 抽屉状态及方法
+const drawer = ref(false)
+const openUploadField = () => {
+    drawer.value = true
+}
+
 // 加载图片列表
 function getList(page = null) {
     if (typeof page === 'number') {
@@ -111,7 +122,8 @@ const handleDelete = id => {
 }
 // 暴露方法
 defineExpose({
-    loadData
+    loadData,
+    openUploadField
 })
 </script>
 

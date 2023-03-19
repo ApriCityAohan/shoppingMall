@@ -2,6 +2,7 @@
     <el-container class="bg-white rounded" :style="{ height: h + 'px' }">
         <el-header class="image-header">
             <el-button type="primary" size="small" @click="handleAdd">新增图片分类</el-button>
+            <el-button type="warning" size="small" @click="openUploadDrawer">上传图片</el-button>
         </el-header>
         <el-container>
             <ImageAside ref="handleOpenDrawer" @change="handleChange" />
@@ -30,6 +31,10 @@ const handleImageRef = ref(null)
 const handleChange = id => {
     // 当切换事件触发后，触发图片列表的加载数据方法
     handleImageRef.value.loadData(id)
+}
+// 打开上传抽屉
+const openUploadDrawer = () => {
+    handleImageRef.value.openUploadField()
 }
 </script>
 
