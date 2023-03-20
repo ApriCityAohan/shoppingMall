@@ -23,7 +23,7 @@
                         title="是否要删除公告?"
                         confirm-button-text="确认"
                         cancel-button-text="取消"
-                        @confirm="handleNoticeDelete(scope.row)"
+                        @confirm="handleNoticeDelete(scope.row.id)"
                     >
                         <template #reference>
                             <el-button text type="primary" size="small">删除</el-button>
@@ -42,7 +42,7 @@
                 @current-change="getData"
             />
         </div>
-        <Drawer ref="drawerRef" title="新增" @submit="handleSubmit">
+        <Drawer ref="drawerRef" :title="drawerTitle" @submit="handleSubmit">
             <el-form ref="formRef" :model="form" :rules="rules" label-width="80px" :inline="false">
                 <el-form-item label="公告标题" prop="title">
                     <el-input v-model="form.title" placeholder="公告标题"></el-input>
@@ -61,9 +61,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive, computed } from 'vue'
 // eslint-disable-next-line no-unused-vars
-import { getNoticeList, createNotice } from '~/api/notice.js'
+import { getNoticeList, createNotice, updateNotice, deleteNotice } from '~/api/notice.js'
 import Drawer from '~/components/Drawer.vue'
 import { toast } from '~/utils/util.js'
 // 公告列表
@@ -82,7 +82,7 @@ function getData(page) {
     loading.value = true
     getNoticeList(currentPage.value)
         .then(res => {
-            console.log(res)
+            // console.log(res)
             tableData.value = res.list
             total.value = res.totalCount
         })
@@ -93,10 +93,16 @@ function getData(page) {
 getData()
 // 抽屉Ref
 const drawerRef = ref(null)
+// 抽屉标识
+const editId = ref(0)
+// 抽屉标题
+const drawerTitle = computed(() => {
+    return editId.value ? '修改' : '新增'
+})
 // 表单Ref
 const formRef = ref(null)
 // 表单数据
-const form = ref({
+const form = reactive({
     title: '',
     content: ''
 })
@@ -117,18 +123,40 @@ const rules = ref({
         }
     ]
 })
+function initForm(row = false) {
+    if (formRef.value) formRef.value.clearValidate()
+    if (row) {
+        for (const key in form.value) {
+            form[key] = row[key]
+        }
+    }
+}
 // 新增公告
 const handleAdd = () => {
+    editId.value = 0
+    initForm({
+        title: '',
+        content: ''
+    })
     drawerRef.value.open()
 }
 // 修改公告
 const handleNoticeEdit = row => {
-    console.log(row)
+    editId.value = row.id
+    initForm(row)
     drawerRef.value.open()
 }
 // 删除公告
-const handleNoticeDelete = row => {
-    console.log(row)
+const handleNoticeDelete = id => {
+    loading.value = true
+    deleteNotice(id)
+        .then(res => {
+            toast('删除成功')
+            getData(currentPage.value)
+        })
+        .finally(() => {
+            loading.value = false
+        })
 }
 // 提交表单
 const handleSubmit = () => {
@@ -136,16 +164,15 @@ const handleSubmit = () => {
         if (!valid) return false
         drawerRef.value.loadOn()
         loading.value = true
-        createNotice(form.value)
-            .then(res => {
-                toast('新增成功')
-                getData()
-                drawerRef.value.close()
-            })
-            .finally(() => {
-                drawerRef.value.loadOff()
-                loading.value = false
-            })
+        const fun = editId.value ? updateNotice(editId.value, form) : createNotice(form)
+        fun.then(res => {
+            toast(drawerTitle.value + '成功')
+            getData()
+            drawerRef.value.close()
+        }).finally(() => {
+            drawerRef.value.loadOff()
+            loading.value = false
+        })
     })
 }
 </script>
