@@ -1,7 +1,7 @@
 <template>
     <el-card shadow="never">
         <div class="flex justify-between items-center mb-3">
-            <el-button type="primary" size="small">新增</el-button>
+            <el-button type="primary" size="small" @click="handleAdd">新增</el-button>
             <el-button text size="small" @click="getData">
                 <el-icon :size="20"><Refresh /></el-icon>
             </el-button>
@@ -42,19 +42,32 @@
                 @current-change="getData"
             />
         </div>
+        <Drawer ref="drawerRef" title="新增" @submit="handleSubmit">
+            <el-form ref="formRef" :model="form" :rules="rules" label-width="80px" :inline="false">
+                <el-form-item label="公告标题" prop="title">
+                    <el-input v-model="form.title" placeholder="公告标题"></el-input>
+                </el-form-item>
+                <el-form-item label="公告内容" prop="content">
+                    <el-input
+                        v-model="form.content"
+                        :rows="5"
+                        type="textarea"
+                        placeholder="公告内容"
+                    />
+                </el-form-item>
+            </el-form>
+        </Drawer>
     </el-card>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { getNoticeList } from '~/api/notice.js'
+// eslint-disable-next-line no-unused-vars
+import { getNoticeList, createNotice } from '~/api/notice.js'
+import Drawer from '~/components/Drawer.vue'
+import { toast } from '~/utils/util.js'
 // 公告列表
-const tableData = ref([
-    {
-        title: 'Tom',
-        create_time: '2016-05-03'
-    }
-])
+const tableData = ref([])
 // Loading状态
 const loading = ref(false)
 // 页码
@@ -78,13 +91,62 @@ function getData(page) {
         })
 }
 getData()
+// 抽屉Ref
+const drawerRef = ref(null)
+// 表单Ref
+const formRef = ref(null)
+// 表单数据
+const form = ref({
+    title: '',
+    content: ''
+})
+// 表单验证规则
+const rules = ref({
+    title: [
+        {
+            required: true,
+            message: '请输入公告标题',
+            trigger: 'blur'
+        }
+    ],
+    content: [
+        {
+            required: true,
+            message: '请输入公告内容',
+            trigger: 'blur'
+        }
+    ]
+})
+// 新增公告
+const handleAdd = () => {
+    drawerRef.value.open()
+}
 // 修改公告
 const handleNoticeEdit = row => {
     console.log(row)
+    drawerRef.value.open()
 }
 // 删除公告
 const handleNoticeDelete = row => {
     console.log(row)
+}
+// 提交表单
+const handleSubmit = () => {
+    formRef.value.validate(valid => {
+        if (!valid) return false
+        drawerRef.value.loadOn()
+        loading.value = true
+        createNotice(form.value)
+            .then(res => {
+                toast('新增成功')
+                getData()
+                drawerRef.value.close()
+            })
+            .finally(() => {
+                drawerRef.value.loadOff()
+                loading.value = false
+            })
+    })
 }
 </script>
 
