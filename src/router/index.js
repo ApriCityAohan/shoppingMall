@@ -43,6 +43,12 @@ const routeVlaue = [
         meta: { title: '订单列表' }
     },
     {
+        path: '/manager/list',
+        name: '/manager/list',
+        component: () => import('~/pages/manager/List.vue'),
+        meta: { title: '管理员管理' }
+    },
+    {
         path: '/comment/list',
         name: '/comment/list',
         component: () => import('~/pages/comment/List.vue'),
