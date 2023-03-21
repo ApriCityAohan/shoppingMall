@@ -1,5 +1,26 @@
 <template>
     <el-card shadow="never">
+        <div class="mb-3">
+            <el-form :model="searchForm" label-width="80px" size="small">
+                <el-row :gutter="20">
+                    <el-col :span="8" :offset="0">
+                        <el-form-item label="关键词">
+                            <el-input
+                                v-model="searchForm.keyword"
+                                placeholder="管理员昵称"
+                                clearable
+                            ></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8" :offset="8">
+                        <div class="flex items-center justify-end">
+                            <el-button type="primary" @click="getData">搜索</el-button>
+                            <el-button @click="handleResetSearch">重置</el-button>
+                        </div>
+                    </el-col>
+                </el-row>
+            </el-form>
+        </div>
         <div class="flex justify-between items-center mb-3">
             <el-button type="primary" size="small" @click="handleAdd">新增</el-button>
             <el-button text size="small" @click="getData">
@@ -91,6 +112,15 @@ import { getNoticeList, createNotice, updateNotice, deleteNotice } from '~/api/n
 import { getManagerList } from '~/api/manager.js'
 import Drawer from '~/components/Drawer.vue'
 import { toast } from '~/utils/util.js'
+
+// 搜索表单
+const searchForm = reactive({
+    keyword: ''
+})
+const handleResetSearch = () => {
+    searchForm.keyword = ''
+    getData()
+}
 // 公告列表
 const tableData = ref([])
 // Loading状态
@@ -105,10 +135,7 @@ function getData(page) {
         currentPage.value = page
     }
     loading.value = true
-    getManagerList(currentPage.value, {
-        limit: 10,
-        keyword: ''
-    })
+    getManagerList(currentPage.value, searchForm)
         .then(res => {
             // console.log(res)
             tableData.value = res.list
