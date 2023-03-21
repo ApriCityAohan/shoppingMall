@@ -50,30 +50,42 @@
             </el-table-column>
             <el-table-column label="所属管理员" width="120">
                 <template #default="{ row }">
-                    <el-switch :model-value="row.status" :active-value="1" :inactive-value="0">
+                    <el-switch
+                        :model-value="row.status"
+                        :active-value="1"
+                        :inactive-value="0"
+                        :loading="row.statusLoading"
+                        :disabled="row.super === 1 ?? false"
+                        @change="handleStatusChange($event, row)"
+                    >
                     </el-switch>
                 </template>
             </el-table-column>
             <el-table-column label="操作" align="right">
                 <template #default="scope">
-                    <el-button
-                        text
-                        type="primary"
-                        size="small"
-                        @click="handleNoticeEdit(scope.row)"
-                    >
-                        修改
-                    </el-button>
-                    <el-popconfirm
-                        title="是否要删除该管理员?"
-                        confirm-button-text="确认"
-                        cancel-button-text="取消"
-                        @confirm="handleNoticeDelete(scope.row.id)"
-                    >
-                        <template #reference>
-                            <el-button text type="primary" size="small">删除</el-button>
-                        </template>
-                    </el-popconfirm>
+                    <small v-if="scope.row.super === 1 ?? false" class="text-sm text-gray-500">
+                        暂无操作
+                    </small>
+                    <div v-else>
+                        <el-button
+                            text
+                            type="primary"
+                            size="small"
+                            @click="handleNoticeEdit(scope.row)"
+                        >
+                            修改
+                        </el-button>
+                        <el-popconfirm
+                            title="是否要删除该管理员?"
+                            confirm-button-text="确认"
+                            cancel-button-text="取消"
+                            @confirm="handleNoticeDelete(scope.row.id)"
+                        >
+                            <template #reference>
+                                <el-button text type="primary" size="small">删除</el-button>
+                            </template>
+                        </el-popconfirm>
+                    </div>
                 </template>
             </el-table-column>
         </el-table>
@@ -109,7 +121,7 @@
 import { ref, reactive, computed } from 'vue'
 // eslint-disable-next-line no-unused-vars
 import { getNoticeList, createNotice, updateNotice, deleteNotice } from '~/api/notice.js'
-import { getManagerList } from '~/api/manager.js'
+import { getManagerList, updateManagerStatus } from '~/api/manager.js'
 import Drawer from '~/components/Drawer.vue'
 import { toast } from '~/utils/util.js'
 
@@ -129,7 +141,7 @@ const loading = ref(false)
 const currentPage = ref(1)
 const total = ref(0)
 const limit = ref(10)
-// 获取公告列表
+// 获取管理员列表
 function getData(page) {
     if (typeof page === 'number') {
         currentPage.value = page
@@ -138,7 +150,10 @@ function getData(page) {
     getManagerList(currentPage.value, searchForm)
         .then(res => {
             // console.log(res)
-            tableData.value = res.list
+            tableData.value = res.list.map(o => {
+                o.statusLoading = false
+                return o
+            })
             total.value = res.totalCount
         })
         .finally(() => {
@@ -211,6 +226,18 @@ const handleNoticeDelete = id => {
         })
         .finally(() => {
             loading.value = false
+        })
+}
+// 修改管理员状态
+const handleStatusChange = (status, row) => {
+    row.statusLoading = true
+    updateManagerStatus(row.id, status)
+        .then(res => {
+            toast('修改状态成功')
+            row.status = status
+        })
+        .finally(() => {
+            row.statusLoading = false
         })
 }
 // 提交表单
