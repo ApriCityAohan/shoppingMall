@@ -126,7 +126,7 @@ const rules = ref({
 function initForm(row = false) {
     if (formRef.value) formRef.value.clearValidate()
     if (row) {
-        for (const key in form.value) {
+        for (const key in form) {
             form[key] = row[key]
         }
     }
