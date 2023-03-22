@@ -12,12 +12,12 @@
             </el-header>
             <el-container>
                 <ImageAside ref="handleOpenDrawer" @change="handleChange" />
-                <ImageMain ref="handleImageRef" />
+                <ImageMain ref="handleImageRef" @choose="handleChoose" />
             </el-container>
         </el-container>
         <template #footer>
             <span>
-                <el-button @click="dialogVisible = false">取消</el-button>
+                <el-button @click="close">取消</el-button>
                 <el-button type="primary" @click="submit">确定</el-button>
             </span>
         </template>
@@ -30,12 +30,9 @@ import ImageAside from '~/components/ImageAside.vue'
 import ImageMain from '~/components/ImageMain.vue'
 const dialogVisible = ref(false)
 
-const open = () => {
-    dialogVisible.value = true
-}
-const submit = () => {
-    console.log('submit')
-}
+const open = () => (dialogVisible.value = true)
+
+const close = () => (dialogVisible.value = false)
 
 // 抽屉Ref
 const handleOpenDrawer = ref(null)
@@ -53,6 +50,26 @@ const handleChange = id => {
 // 打开上传抽屉
 const openUploadDrawer = () => {
     handleImageRef.value.openUploadField()
+}
+// eslint-disable-next-line no-unused-vars
+const props = defineProps({
+    modelValue: {
+        type: [String, Array],
+        default: ''
+    }
+})
+const emit = defineEmits(['update:modelValue'])
+// 选择图片的URL
+let urls = []
+// 选择图片
+const handleChoose = e => {
+    urls = e.map(o => o.url)
+}
+const submit = () => {
+    if (urls.length) {
+        emit('update:modelValue', urls[0])
+    }
+    close()
 }
 </script>
 
