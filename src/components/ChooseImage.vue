@@ -19,7 +19,7 @@
             </el-header>
             <el-container>
                 <ImageAside ref="handleOpenDrawer" @change="handleChange" />
-                <ImageMain ref="handleImageRef" @choose="handleChoose" />
+                <ImageMain ref="handleImageRef" checkbox="true" @choose="handleChoose" />
             </el-container>
         </el-container>
         <template #footer>

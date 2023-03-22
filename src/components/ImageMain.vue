@@ -19,7 +19,11 @@
                         ></el-image>
                         <div class="image-title">{{ item.name }}</div>
                         <div class="flex items-center justify-center p-2">
-                            <el-checkbox v-model="item.checked" @change="handleChooseCheck(item)" />
+                            <el-checkbox
+                                v-if="checkbox"
+                                v-model="item.checked"
+                                @change="handleChooseCheck(item)"
+                            />
                             <el-button
                                 class="ml-3"
                                 type="primary"
@@ -141,6 +145,12 @@ const handleDelete = id => {
 const handleSuccess = () => {
     getList(1)
 }
+defineProps({
+    checkbox: {
+        type: Boolean,
+        default: false
+    }
+})
 const emit = defineEmits(['choose'])
 // 选中图片内容
 const checkImage = computed(() => list.value.filter(o => o.checked))
