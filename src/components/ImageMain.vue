@@ -16,6 +16,8 @@
                             :lazy="true"
                             class="h-[150px]"
                             style="width: 100%"
+                            :preview-src-list="[item.url]"
+                            :initial-index="0"
                         ></el-image>
                         <div class="image-title">{{ item.name }}</div>
                         <div class="flex items-center justify-center p-2">
