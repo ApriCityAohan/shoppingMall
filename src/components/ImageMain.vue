@@ -141,6 +141,8 @@ const handleDelete = id => {
 const handleSuccess = () => {
     getList(1)
 }
+const emit = defineEmits(['choose'])
+// 选中图片内容
 const checkImage = computed(() => list.value.filter(o => o.checked))
 // checkbox选择
 const handleChooseCheck = item => {
@@ -148,6 +150,7 @@ const handleChooseCheck = item => {
         item.checked = false
         return toast('只能选择一张图片', 'error')
     }
+    emit('choose', checkImage.value)
 }
 // 暴露方法
 defineExpose({
