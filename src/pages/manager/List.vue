@@ -108,7 +108,7 @@
                     <el-input v-model="form.password" placeholder="密码"></el-input>
                 </el-form-item>
                 <el-form-item label="头像">
-                    <el-input v-model="form.avatar"></el-input>
+                    <ChooseImage />
                 </el-form-item>
                 <el-form-item label="所属角色" prop="role_id">
                     <el-select v-model="form.role_id" placeholder="选择所属角色">
@@ -132,7 +132,6 @@
 
 <script setup>
 import { ref, reactive, computed } from 'vue'
-
 import {
     getManagerList,
     updateManagerStatus,
@@ -141,6 +140,7 @@ import {
     deleteManager
 } from '~/api/manager.js'
 import Drawer from '~/components/Drawer.vue'
+import ChooseImage from '~/components/ChooseImage.vue'
 import { toast } from '~/utils/util.js'
 
 // 搜索表单
