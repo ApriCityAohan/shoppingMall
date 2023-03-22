@@ -1,4 +1,11 @@
 <template>
+    <div v-if="modelValue">
+        <el-image
+            :src="modelValue"
+            fit="cover"
+            class="w-[100px] h-[100px] border rounded"
+        ></el-image>
+    </div>
     <div class="choose-img-btn" @click="open">
         <el-icon :size="25" class="text-gray-400"><Plus /></el-icon>
     </div>
@@ -75,7 +82,7 @@ const submit = () => {
 
 <style scoped>
 .choose-img-btn {
-    @apply w-[100px] h-[100px] rounded border border-dashed flex items-center justify-center cursor-pointer hover:(bg-gray-100);
+    @apply w-[100px] h-[100px] mx-1 mb-3 rounded border border-dashed flex items-center justify-center cursor-pointer hover:(bg-gray-100);
 }
 .image-header {
     border-bottom: 1px solid #eeeeee;
