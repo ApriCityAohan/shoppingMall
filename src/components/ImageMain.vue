@@ -3,8 +3,13 @@
         <div class="top p-3">
             <!-- <div >{{ item.url }}</div> -->
             <el-row :gutter="10">
-                <el-col v-for="(item, index) in list" :key="index" :span="6">
-                    <el-card shadow="hover" :body-style="{ padding: 0 }" class="m-3 relative">
+                <el-col v-for="(item, index) in list" :key="index" :span="24" :sm="12" :md="6">
+                    <el-card
+                        shadow="hover"
+                        :body-style="{ padding: 0 }"
+                        class="m-3 relative"
+                        :class="{ 'border-blue-500': item.checked }"
+                    >
                         <el-image
                             :src="item.url"
                             fit="cover"
@@ -14,7 +19,13 @@
                         ></el-image>
                         <div class="image-title">{{ item.name }}</div>
                         <div class="flex items-center justify-center p-2">
-                            <el-button type="primary" size="small" text @click="handleRename(item)"
+                            <el-checkbox v-model="item.checked" @change="handleChooseCheck(item)" />
+                            <el-button
+                                class="ml-3"
+                                type="primary"
+                                size="small"
+                                text
+                                @click="handleRename(item)"
                                 >重命名</el-button
                             >
                             <el-popconfirm
@@ -52,7 +63,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { getImageList, updateImage, deleteImage } from '~/api/image.js'
 import { showPrompt, toast } from '~/utils/util.js'
 import UploadField from '~/components/UploadField.vue'
@@ -82,7 +93,10 @@ function getList(page = null) {
     getImageList(imageClassId.value, currentPage.value)
         .then(res => {
             // console.log(res)
-            list.value = res.list
+            list.value = res.list.map(item => {
+                item.checked = false
+                return item
+            })
             total.value = res.totalCount
         })
         .finally(() => {
@@ -126,6 +140,14 @@ const handleDelete = id => {
 // 上传成功
 const handleSuccess = () => {
     getList(1)
+}
+const checkImage = computed(() => list.value.filter(o => o.checked))
+// checkbox选择
+const handleChooseCheck = item => {
+    if (item.checked && checkImage.value.length > 1) {
+        item.checked = false
+        return toast('只能选择一张图片', 'error')
+    }
 }
 // 暴露方法
 defineExpose({
