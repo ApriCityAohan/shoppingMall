@@ -66,31 +66,10 @@ import { ref, reactive, computed } from 'vue'
 import { getNoticeList, createNotice, updateNotice, deleteNotice } from '~/api/notice.js'
 import Drawer from '~/components/Drawer.vue'
 import { toast } from '~/utils/util.js'
-// 公告列表
-const tableData = ref([])
-// Loading状态
-const loading = ref(false)
-// 页码
-const currentPage = ref(1)
-const total = ref(0)
-const limit = ref(10)
-// 获取公告列表
-function getData(page) {
-    if (typeof page === 'number') {
-        currentPage.value = page
-    }
-    loading.value = true
-    getNoticeList(currentPage.value)
-        .then(res => {
-            // console.log(res)
-            tableData.value = res.list
-            total.value = res.totalCount
-        })
-        .finally(() => {
-            loading.value = false
-        })
-}
-getData()
+import { initTableData } from '~/utils/useCommon.js'
+const { tableData, loading, currentPage, total, limit, getData } = initTableData({
+    getListFun: getNoticeList
+})
 // 抽屉Ref
 const drawerRef = ref(null)
 // 抽屉标识

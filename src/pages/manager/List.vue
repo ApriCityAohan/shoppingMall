@@ -142,44 +142,22 @@ import {
 import Drawer from '~/components/Drawer.vue'
 import ChooseImage from '~/components/ChooseImage.vue'
 import { toast } from '~/utils/util.js'
-
-// 搜索表单
-const searchForm = reactive({
-    keyword: ''
-})
-const handleResetSearch = () => {
-    searchForm.keyword = ''
-    getData()
-}
-// 公告列表
-const tableData = ref([])
-// Loading状态
-const loading = ref(false)
-// 页码
-const currentPage = ref(1)
-const total = ref(0)
-const limit = ref(10)
-// 获取管理员列表
-function getData(page) {
-    if (typeof page === 'number') {
-        currentPage.value = page
-    }
-    loading.value = true
-    getManagerList(currentPage.value, searchForm)
-        .then(res => {
-            // console.log(res)
+import { initTableData } from '~/utils/useCommon.js'
+const { searchForm, handleResetSearch, tableData, loading, currentPage, total, limit, getData } =
+    initTableData({
+        getListFun: getManagerList,
+        searchForm: {
+            keyword: ''
+        },
+        onGetListSuccess: res => {
             tableData.value = res.list.map(o => {
                 o.statusLoading = false
                 return o
             })
             total.value = res.totalCount
             roles.value = res.roles
-        })
-        .finally(() => {
-            loading.value = false
-        })
-}
-getData()
+        }
+    })
 // 抽屉Ref
 const drawerRef = ref(null)
 // 抽屉标识
