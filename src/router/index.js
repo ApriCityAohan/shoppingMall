@@ -77,6 +77,12 @@ const routeVlaue = [
         name: '/setting/base',
         component: () => import('~/pages/setting/Base.vue'),
         meta: { title: '设置列表' }
+    },
+    {
+        path: '/access/list',
+        name: '/access/list',
+        component: () => import('~/pages/access/List.vue'),
+        meta: { title: '权限管理' }
     }
 ]
 export const router = createRouter({
