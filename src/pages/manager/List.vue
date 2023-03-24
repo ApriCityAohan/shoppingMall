@@ -21,12 +21,7 @@
                 </el-row>
             </el-form>
         </div>
-        <div class="flex justify-between items-center mb-3">
-            <el-button type="primary" size="small" @click="handleAdd">新增</el-button>
-            <el-button text size="small" @click="getData">
-                <el-icon :size="20"><Refresh /></el-icon>
-            </el-button>
-        </div>
+        <ListHeader @create="handleAdd" @refresh="getData" />
         <el-table v-loading="loading" :data="tableData" stripe style="width: 100%">
             <el-table-column label="管理员" width="280">
                 <template #default="{ row }">
@@ -136,6 +131,8 @@ import {
 } from '~/api/manager.js'
 import Drawer from '~/components/Drawer.vue'
 import ChooseImage from '~/components/ChooseImage.vue'
+import ListHeader from '~/components/ListHeader.vue'
+
 import { initTableData, initForm } from '~/utils/useCommon.js'
 const {
     searchForm,

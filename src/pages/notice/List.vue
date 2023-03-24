@@ -1,11 +1,6 @@
 <template>
     <el-card shadow="never">
-        <div class="flex justify-between items-center mb-3">
-            <el-button type="primary" size="small" @click="handleAdd">新增</el-button>
-            <el-button text size="small" @click="getData">
-                <el-icon :size="20"><Refresh /></el-icon>
-            </el-button>
-        </div>
+        <ListHeader @create="handleAdd" @refresh="getData" />
         <el-table v-loading="loading" :data="tableData" stripe style="width: 100%">
             <el-table-column prop="title" label="公告标题" />
             <el-table-column prop="create_time" label="发布时间" width="320" />
@@ -58,6 +53,7 @@
 <script setup>
 import { getNoticeList, createNotice, updateNotice, deleteNotice } from '~/api/notice.js'
 import Drawer from '~/components/Drawer.vue'
+import ListHeader from '~/components/ListHeader.vue'
 import { initTableData, initForm } from '~/utils/useCommon.js'
 const { tableData, loading, currentPage, total, limit, getData, handleDelete } = initTableData({
     getListFun: getNoticeList,
