@@ -92,23 +92,22 @@ export function initForm(opt = {}) {
     })
     // 表单Ref
     const formRef = ref(null)
-    // const definedForm = opt.definedForm
+    const defaultForm = opt.form
     const form = reactive({})
 
     // 表单验证规则
     const rules = ref(opt.rules || {})
     function initForm(row = false) {
         if (formRef.value) formRef.value.clearValidate()
-        if (row) {
-            for (const key in form) {
-                form[key] = row[key]
-            }
+
+        for (const key in defaultForm) {
+            form[key] = row[key]
         }
     }
     // 新增
     const handleAdd = () => {
         editId.value = 0
-        initForm(opt.form)
+        initForm(defaultForm)
         drawerRef.value.open()
     }
     // 修改
