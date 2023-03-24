@@ -67,12 +67,7 @@
                         暂无操作
                     </small>
                     <div v-else>
-                        <el-button
-                            text
-                            type="primary"
-                            size="small"
-                            @click="handleNoticeEdit(scope.row)"
-                        >
+                        <el-button text type="primary" size="small" @click="handleEdit(scope.row)">
                             修改
                         </el-button>
                         <el-popconfirm
@@ -131,7 +126,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref } from 'vue'
 import {
     getManagerList,
     updateManagerStatus,
@@ -142,7 +137,7 @@ import {
 import Drawer from '~/components/Drawer.vue'
 import ChooseImage from '~/components/ChooseImage.vue'
 import { toast } from '~/utils/util.js'
-import { initTableData } from '~/utils/useCommon.js'
+import { initTableData, initForm } from '~/utils/useCommon.js'
 const { searchForm, handleResetSearch, tableData, loading, currentPage, total, limit, getData } =
     initTableData({
         getListFun: getManagerList,
@@ -158,69 +153,23 @@ const { searchForm, handleResetSearch, tableData, loading, currentPage, total, l
             roles.value = res.roles
         }
     })
-// 抽屉Ref
-const drawerRef = ref(null)
-// 抽屉标识
-const editId = ref(0)
-// 抽屉标题
-const drawerTitle = computed(() => {
-    return editId.value ? '修改' : '新增'
-})
-// 表单Ref
-const formRef = ref(null)
-// 表单数据
-const form = reactive({
-    username: '',
-    password: '',
-    avatar: '',
-    role_id: null,
-    status: 0
-})
+const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, handleSubmit } =
+    initForm({
+        getData,
+        form: {
+            username: '',
+            password: '',
+            avatar: '',
+            role_id: '',
+            status: 0
+        },
+        create: createManager,
+        update: updateManager,
+        loading
+    })
 // 下拉框数据
 const roles = ref([])
-// 表单验证规则
-const rules = ref({
-    title: [
-        {
-            required: true,
-            message: '请输入公告标题',
-            trigger: 'blur'
-        }
-    ],
-    content: [
-        {
-            required: true,
-            message: '请输入公告内容',
-            trigger: 'blur'
-        }
-    ]
-})
-function initForm(row = false) {
-    if (formRef.value) formRef.value.clearValidate()
-    if (row) {
-        for (const key in form) {
-            form[key] = row[key]
-        }
-    }
-}
-// 新增公告
-const handleAdd = () => {
-    editId.value = 0
-    initForm({
-        username: '',
-        password: '',
-        avatar: '',
-        role_id: null,
-        status: 1
-    })
-    drawerRef.value.open()
-}
-// 修改公告
-const handleNoticeEdit = row => {
-    editId.value = row.id
-    initForm(row)
-    drawerRef.value.open()
-}
+
 // 删除公告
 const handleNoticeDelete = id => {
     loading.value = true
@@ -244,23 +193,6 @@ const handleStatusChange = (status, row) => {
         .finally(() => {
             row.statusLoading = false
         })
-}
-// 提交表单
-const handleSubmit = () => {
-    formRef.value.validate(valid => {
-        if (!valid) return false
-        drawerRef.value.loadOn()
-        loading.value = true
-        const fun = editId.value ? updateManager(editId.value, form) : createManager(form)
-        fun.then(res => {
-            toast(drawerTitle.value + '成功')
-            getData()
-            drawerRef.value.close()
-        }).finally(() => {
-            drawerRef.value.loadOff()
-            loading.value = false
-        })
-    })
 }
 </script>
 

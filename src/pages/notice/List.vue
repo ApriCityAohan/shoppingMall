@@ -11,12 +11,7 @@
             <el-table-column prop="create_time" label="发布时间" width="320" />
             <el-table-column label="操作" width="180" align="center">
                 <template #default="scope">
-                    <el-button
-                        text
-                        type="primary"
-                        size="small"
-                        @click="handleNoticeEdit(scope.row)"
-                    >
+                    <el-button text type="primary" size="small" @click="handleEdit(scope.row)">
                         修改
                     </el-button>
                     <el-popconfirm
@@ -61,70 +56,41 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
-// eslint-disable-next-line no-unused-vars
 import { getNoticeList, createNotice, updateNotice, deleteNotice } from '~/api/notice.js'
 import Drawer from '~/components/Drawer.vue'
 import { toast } from '~/utils/util.js'
-import { initTableData } from '~/utils/useCommon.js'
+import { initTableData, initForm } from '~/utils/useCommon.js'
 const { tableData, loading, currentPage, total, limit, getData } = initTableData({
     getListFun: getNoticeList
 })
-// 抽屉Ref
-const drawerRef = ref(null)
-// 抽屉标识
-const editId = ref(0)
-// 抽屉标题
-const drawerTitle = computed(() => {
-    return editId.value ? '修改' : '新增'
-})
-// 表单Ref
-const formRef = ref(null)
-// 表单数据
-const form = reactive({
-    title: '',
-    content: ''
-})
-// 表单验证规则
-const rules = ref({
-    title: [
-        {
-            required: true,
-            message: '请输入公告标题',
-            trigger: 'blur'
-        }
-    ],
-    content: [
-        {
-            required: true,
-            message: '请输入公告内容',
-            trigger: 'blur'
-        }
-    ]
-})
-function initForm(row = false) {
-    if (formRef.value) formRef.value.clearValidate()
-    if (row) {
-        for (const key in form) {
-            form[key] = row[key]
-        }
-    }
-}
-// 新增公告
-const handleAdd = () => {
-    editId.value = 0
+const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, handleSubmit } =
     initForm({
-        title: '',
-        content: ''
+        getData,
+        form: {
+            title: '',
+            content: ''
+        },
+        rules: {
+            title: [
+                {
+                    required: true,
+                    message: '请输入公告标题',
+                    trigger: 'blur'
+                }
+            ],
+            content: [
+                {
+                    required: true,
+                    message: '请输入公告内容',
+                    trigger: 'blur'
+                }
+            ]
+        },
+        create: createNotice,
+        update: updateNotice,
+        loading
     })
-    drawerRef.value.open()
-}
-// 修改公告
-const handleNoticeEdit = row => {
-    editId.value = row.id
-    initForm(row)
-    drawerRef.value.open()
-}
+
 // 删除公告
 const handleNoticeDelete = id => {
     loading.value = true
@@ -136,23 +102,6 @@ const handleNoticeDelete = id => {
         .finally(() => {
             loading.value = false
         })
-}
-// 提交表单
-const handleSubmit = () => {
-    formRef.value.validate(valid => {
-        if (!valid) return false
-        drawerRef.value.loadOn()
-        loading.value = true
-        const fun = editId.value ? updateNotice(editId.value, form) : createNotice(form)
-        fun.then(res => {
-            toast(drawerTitle.value + '成功')
-            getData()
-            drawerRef.value.close()
-        }).finally(() => {
-            drawerRef.value.loadOff()
-            loading.value = false
-        })
-    })
 }
 </script>
 

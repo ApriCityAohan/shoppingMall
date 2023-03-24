@@ -1,5 +1,6 @@
-import { ref, reactive } from 'vue'
-
+import { ref, reactive, computed } from 'vue'
+import { toast } from '~/utils/util.js'
+// 列表、分页、搜索
 export function initTableData(opt = {}) {
     // 搜索表单处理
     let searchForm = null
@@ -50,5 +51,73 @@ export function initTableData(opt = {}) {
         total,
         limit,
         getData
+    }
+}
+// 新增、编辑
+export function initForm(opt = {}) {
+    // 抽屉Ref
+    const drawerRef = ref(null)
+    // 抽屉标识
+    const editId = ref(0)
+    // 抽屉标题
+    const drawerTitle = computed(() => {
+        return editId.value ? '修改' : '新增'
+    })
+    // 表单Ref
+    const formRef = ref(null)
+    // const definedForm = opt.definedForm
+    const form = reactive({})
+
+    // 表单验证规则
+    const rules = ref(opt.rules || {})
+    function initForm(row = false) {
+        if (formRef.value) formRef.value.clearValidate()
+        if (row) {
+            for (const key in form) {
+                form[key] = row[key]
+            }
+        }
+    }
+    // 新增
+    const handleAdd = () => {
+        editId.value = 0
+        initForm(opt.form)
+        drawerRef.value.open()
+    }
+    // 修改
+    const handleEdit = row => {
+        editId.value = row.id
+        initForm(row)
+        drawerRef.value.open()
+    }
+
+    // 提交表单
+    const handleSubmit = () => {
+        formRef.value.validate(valid => {
+            if (!valid) return false
+            drawerRef.value.loadOn()
+            opt.loading.value = true
+            const fun = editId.value ? opt.update(editId.value, form) : opt.create(form)
+            fun.then(res => {
+                toast(drawerTitle.value + '成功')
+                opt.getData()
+                drawerRef.value.close()
+            }).finally(() => {
+                drawerRef.value.loadOff()
+                opt.loading.value = false
+            })
+        })
+    }
+
+    return {
+        drawerRef,
+        formRef,
+        form,
+        rules,
+        editId,
+        drawerTitle,
+        handleAdd,
+        handleEdit,
+        handleSubmit
     }
 }
