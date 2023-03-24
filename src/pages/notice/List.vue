@@ -18,7 +18,7 @@
                         title="是否要删除公告?"
                         confirm-button-text="确认"
                         cancel-button-text="取消"
-                        @confirm="handleNoticeDelete(scope.row.id)"
+                        @confirm="handleDelete(scope.row.id)"
                     >
                         <template #reference>
                             <el-button text type="primary" size="small">删除</el-button>
@@ -58,10 +58,10 @@
 <script setup>
 import { getNoticeList, createNotice, updateNotice, deleteNotice } from '~/api/notice.js'
 import Drawer from '~/components/Drawer.vue'
-import { toast } from '~/utils/util.js'
 import { initTableData, initForm } from '~/utils/useCommon.js'
-const { tableData, loading, currentPage, total, limit, getData } = initTableData({
-    getListFun: getNoticeList
+const { tableData, loading, currentPage, total, limit, getData, handleDelete } = initTableData({
+    getListFun: getNoticeList,
+    delete: deleteNotice
 })
 const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, handleSubmit } =
     initForm({
@@ -90,19 +90,6 @@ const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, han
         update: updateNotice,
         loading
     })
-
-// 删除公告
-const handleNoticeDelete = id => {
-    loading.value = true
-    deleteNotice(id)
-        .then(res => {
-            toast('删除成功')
-            getData(currentPage.value)
-        })
-        .finally(() => {
-            loading.value = false
-        })
-}
 </script>
 
 <style scoped></style>

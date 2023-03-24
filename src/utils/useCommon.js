@@ -42,6 +42,31 @@ export function initTableData(opt = {}) {
             })
     }
     getData()
+
+    // 删除公告
+    const handleDelete = id => {
+        loading.value = true
+        opt.delete(id)
+            .then(res => {
+                toast('删除成功')
+                getData(currentPage.value)
+            })
+            .finally(() => {
+                loading.value = false
+            })
+    }
+    // 修改管理员状态
+    const handleStatusChange = (status, row) => {
+        row.statusLoading = true
+        opt.updateStatus(row.id, status)
+            .then(res => {
+                toast('修改状态成功')
+                row.status = status
+            })
+            .finally(() => {
+                row.statusLoading = false
+            })
+    }
     return {
         searchForm,
         handleResetSearch,
@@ -50,7 +75,9 @@ export function initTableData(opt = {}) {
         currentPage,
         total,
         limit,
-        getData
+        getData,
+        handleDelete,
+        handleStatusChange
     }
 }
 // 新增、编辑

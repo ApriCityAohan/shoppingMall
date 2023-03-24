@@ -74,7 +74,7 @@
                             title="是否要删除该管理员?"
                             confirm-button-text="确认"
                             cancel-button-text="取消"
-                            @confirm="handleNoticeDelete(scope.row.id)"
+                            @confirm="handleDelete(scope.row.id)"
                         >
                             <template #reference>
                                 <el-button text type="primary" size="small">删除</el-button>
@@ -136,23 +136,34 @@ import {
 } from '~/api/manager.js'
 import Drawer from '~/components/Drawer.vue'
 import ChooseImage from '~/components/ChooseImage.vue'
-import { toast } from '~/utils/util.js'
 import { initTableData, initForm } from '~/utils/useCommon.js'
-const { searchForm, handleResetSearch, tableData, loading, currentPage, total, limit, getData } =
-    initTableData({
-        getListFun: getManagerList,
-        searchForm: {
-            keyword: ''
-        },
-        onGetListSuccess: res => {
-            tableData.value = res.list.map(o => {
-                o.statusLoading = false
-                return o
-            })
-            total.value = res.totalCount
-            roles.value = res.roles
-        }
-    })
+const {
+    searchForm,
+    handleResetSearch,
+    tableData,
+    loading,
+    currentPage,
+    total,
+    limit,
+    getData,
+    handleDelete,
+    handleStatusChange
+} = initTableData({
+    getListFun: getManagerList,
+    searchForm: {
+        keyword: ''
+    },
+    onGetListSuccess: res => {
+        tableData.value = res.list.map(o => {
+            o.statusLoading = false
+            return o
+        })
+        total.value = res.totalCount
+        roles.value = res.roles
+    },
+    delete: deleteManager,
+    updateStatus: updateManagerStatus
+})
 const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, handleSubmit } =
     initForm({
         getData,
@@ -169,31 +180,6 @@ const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, han
     })
 // 下拉框数据
 const roles = ref([])
-
-// 删除公告
-const handleNoticeDelete = id => {
-    loading.value = true
-    deleteManager(id)
-        .then(res => {
-            toast('删除成功')
-            getData(currentPage.value)
-        })
-        .finally(() => {
-            loading.value = false
-        })
-}
-// 修改管理员状态
-const handleStatusChange = (status, row) => {
-    row.statusLoading = true
-    updateManagerStatus(row.id, status)
-        .then(res => {
-            toast('修改状态成功')
-            row.status = status
-        })
-        .finally(() => {
-            row.statusLoading = false
-        })
-}
 </script>
 
 <style scoped></style>
