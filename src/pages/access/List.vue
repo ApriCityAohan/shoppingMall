@@ -58,7 +58,7 @@
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
                 <el-form-item v-if="form.menu === 1" label="菜单图标" prop="icon">
-                    <el-input v-model="form.icon" placeholder="菜单图标"></el-input>
+                    <IconSelect v-model="form.icon" />
                 </el-form-item>
                 <el-form-item v-if="form.menu === 0" label="后端规则" prop="frontpath">
                     <el-input v-model="form.frontpath" placeholder="后端规则"></el-input>
@@ -92,6 +92,7 @@
 import { ref } from 'vue'
 import ListHeader from '~/components/ListHeader.vue'
 import Drawer from '~/components/Drawer.vue'
+import IconSelect from '~/components/IconSelect.vue'
 // eslint-disable-next-line no-unused-vars
 import { getRuleList, createRule, updateRule } from '~/api/rule'
 import { initTableData, initForm } from '~/utils/useCommon'
