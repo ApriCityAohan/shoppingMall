@@ -20,13 +20,29 @@
                     </el-icon>
                     <span class="ml-2">{{ data.name }}</span>
                     <div class="ml-auto">
-                        <el-switch :model-value="data.status" :active-value="1" :inactive-value="0">
+                        <el-switch
+                            :model-value="data.status"
+                            :active-value="1"
+                            :inactive-value="0"
+                            @change="handleStatusChange($event, data)"
+                        >
                         </el-switch>
                         <el-button text type="primary" size="small" @click="handleEdit(data)">
                             修改
                         </el-button>
-                        <el-button text type="primary" size="small">添加</el-button>
-                        <el-button text type="primary" size="small">删除</el-button>
+                        <el-button text type="primary" size="small" @click="addChild(data.id)"
+                            >添加</el-button
+                        >
+                        <el-popconfirm
+                            title="是否要删除该菜单?"
+                            confirm-button-text="确认"
+                            cancel-button-text="取消"
+                            @confirm="handleDelete(data.id)"
+                        >
+                            <template #reference>
+                                <el-button text type="primary" size="small">删除</el-button>
+                            </template>
+                        </el-popconfirm>
                     </div>
                 </div>
             </template>
@@ -94,20 +110,22 @@ import ListHeader from '~/components/ListHeader.vue'
 import Drawer from '~/components/Drawer.vue'
 import IconSelect from '~/components/IconSelect.vue'
 // eslint-disable-next-line no-unused-vars
-import { getRuleList, createRule, updateRule } from '~/api/rule'
+import { getRuleList, createRule, updateRule, updateRuleStatus, deleteRule } from '~/api/rule'
 import { initTableData, initForm } from '~/utils/useCommon'
 // 默认展开的节点
 const defaultExpandedKeys = ref([])
 
 const options = ref([])
 
-const { loading, tableData, getData } = initTableData({
+const { loading, tableData, getData, handleDelete, handleStatusChange } = initTableData({
     getListFun: getRuleList,
     onGetListSuccess: res => {
         options.value = res.rules
         tableData.value = res.list
         defaultExpandedKeys.value = res.list.map(o => o.id)
-    }
+    },
+    delete: deleteRule,
+    updateStatus: updateRuleStatus
 })
 const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, handleSubmit } =
     initForm({
@@ -127,6 +145,12 @@ const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, han
         update: updateRule,
         loading
     })
+// 添加子节点
+const addChild = id => {
+    handleAdd()
+    form.rule_id = id
+    form.status = 1
+}
 </script>
 
 <style scoped>
