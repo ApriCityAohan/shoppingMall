@@ -1,7 +1,7 @@
 import { ElNotification, ElMessageBox } from 'element-plus'
 import nprogress from 'nprogress'
 // 显示右上提示信息
-export function toast(message, type = 'success', dangerouslyUseHTMLString = false) {
+export function toast(message, type = 'success', dangerouslyUseHTMLString = true) {
     ElNotification({
         message,
         type,
