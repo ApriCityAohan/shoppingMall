@@ -8,6 +8,7 @@
             :props="{ label: 'name', children: 'child' }"
             node-key="id"
             :default-expanded-keys="defaultExpandedKeys"
+            :expand-on-click-node="false"
         >
             <template #default="{ node, data }">
                 <div class="custom-tree-node">
