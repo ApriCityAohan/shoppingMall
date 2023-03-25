@@ -38,14 +38,22 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
 import { useStore } from 'vuex'
 const router = useRouter()
 const route = useRoute()
 const store = useStore()
+// 菜单选中状态
 const defaultActive = ref(route.path)
+// 监听路由变化改变菜单选中状态
+onBeforeRouteUpdate((to, from) => {
+    defaultActive.value = to.path
+})
+// 菜单收缩状态
 const isCollapse = computed(() => !(store.state.menuWidth === '250px'))
+// 菜单列表
 const menuList = computed(() => store.state.menus)
+// 菜单点击事件
 const handleSelect = e => {
     router.push(e)
 }
