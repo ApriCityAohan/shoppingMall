@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/no-unused-vars -->
 <template>
     <el-card shadow="never">
-        <ListHeader @refresh="getData" />
+        <ListHeader @refresh="getData" @create="handleAdd" />
         <el-tree
             v-loading="loading"
             :data="tableData"
@@ -22,32 +22,110 @@
                     <div class="ml-auto">
                         <el-switch :model-value="data.status" :active-value="1" :inactive-value="0">
                         </el-switch>
-                        <el-button text type="primary" size="small">修改</el-button>
+                        <el-button text type="primary" size="small" @click="handleEdit(data)">
+                            修改
+                        </el-button>
                         <el-button text type="primary" size="small">添加</el-button>
                         <el-button text type="primary" size="small">删除</el-button>
                     </div>
                 </div>
             </template>
         </el-tree>
+        <Drawer ref="drawerRef" :title="drawerTitle" @submit="handleSubmit">
+            <el-form ref="formRef" :model="form" :rules="rules" label-width="80px" :inline="false">
+                <el-form-item label="上级菜单" prop="rule_id">
+                    <el-cascader
+                        v-model="form.rule_id"
+                        :options="options"
+                        :props="{
+                            value: 'id',
+                            label: 'name',
+                            children: 'child',
+                            checkStrictly: true,
+                            emitPath: false,
+                            expandTrigger: 'hover'
+                        }"
+                        placeholder="选择上级菜单"
+                    />
+                </el-form-item>
+                <el-form-item label="菜单/规则" prop="menu">
+                    <el-radio-group v-model="form.menu">
+                        <el-radio :label="1" border>菜单</el-radio>
+                        <el-radio :label="0" border>规则</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="名称" prop="name" style="width: 30%">
+                    <el-input v-model="form.name"></el-input>
+                </el-form-item>
+                <el-form-item v-if="form.menu === 1" label="菜单图标" prop="icon">
+                    <el-input v-model="form.icon" placeholder="菜单图标"></el-input>
+                </el-form-item>
+                <el-form-item v-if="form.menu === 0" label="后端规则" prop="frontpath">
+                    <el-input v-model="form.frontpath" placeholder="后端规则"></el-input>
+                </el-form-item>
+                <el-form-item
+                    v-if="form.menu === 1 && form.rule_id > 0"
+                    label="前端路由"
+                    prop="condition"
+                >
+                    <el-input v-model="form.condition" placeholder="前端路由路径"></el-input>
+                </el-form-item>
+                <el-form-item v-if="form.menu === 0" label="请求方式" prop="method">
+                    <el-select v-model="form.method" placeholder="请选择请求方式">
+                        <el-option
+                            v-for="item in ['GET', 'POST', 'PUT', 'DELETE']"
+                            :key="item"
+                            :label="item"
+                            :value="item"
+                        />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="排序" prop="order">
+                    <el-input-number v-model="form.order" :min="0" :max="10000" />
+                </el-form-item>
+            </el-form>
+        </Drawer>
     </el-card>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import ListHeader from '~/components/ListHeader.vue'
+import Drawer from '~/components/Drawer.vue'
 // eslint-disable-next-line no-unused-vars
-import { getRuleList } from '~/api/rule'
-import { initTableData } from '~/utils/useCommon'
-
+import { getRuleList, createRule, updateRule } from '~/api/rule'
+import { initTableData, initForm } from '~/utils/useCommon'
+// 默认展开的节点
 const defaultExpandedKeys = ref([])
+
+const options = ref([])
 
 const { loading, tableData, getData } = initTableData({
     getListFun: getRuleList,
     onGetListSuccess: res => {
+        options.value = res.rules
         tableData.value = res.list
         defaultExpandedKeys.value = res.list.map(o => o.id)
     }
 })
+const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, handleSubmit } =
+    initForm({
+        getData,
+        form: {
+            rule_id: 0,
+            menu: 0,
+            name: '',
+            condition: '',
+            method: '',
+            status: 1,
+            order: 20,
+            icon: '',
+            frontpath: ''
+        },
+        create: createRule,
+        update: updateRule,
+        loading
+    })
 </script>
 
 <style scoped>
