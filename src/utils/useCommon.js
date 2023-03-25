@@ -99,7 +99,6 @@ export function initForm(opt = {}) {
     const rules = ref(opt.rules || {})
     function initForm(row = false) {
         if (formRef.value) formRef.value.clearValidate()
-
         for (const key in defaultForm) {
             form[key] = row[key]
         }
