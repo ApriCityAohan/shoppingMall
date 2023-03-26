@@ -69,11 +69,23 @@
         <!-- 配置权限抽屉 -->
         <Drawer ref="setRoleDrawerRef" title="权限配置" @submit="handleSetRoleSubmit">
             <el-tree-v2
+                ref="treeRef"
                 :data="ruleList"
+                node-key="id"
+                :default-expanded-keys="defaultExpandedKeys"
                 :props="{ label: 'name', children: 'child' }"
                 show-checkbox
                 :height="treeHight"
-            />
+            >
+                <template #default="{ data }">
+                    <div class="flex items-center">
+                        <el-tag :type="data.menu ? '' : 'info'" size="small">
+                            {{ data.menu ? '菜单' : '规则' }}
+                        </el-tag>
+                        <span class="ml-2 text-sm">{{ data.name }}</span>
+                    </div>
+                </template>
+            </el-tree-v2>
         </Drawer>
     </el-card>
 </template>
@@ -119,20 +131,31 @@ const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, han
         update: updateRole,
         loading
     })
-// 配置权限抽屉
+// 配置权限抽屉Ref
 const setRoleDrawerRef = ref(null)
+// 树形权限Ref
+const treeRef = ref(null)
 // 树形权限列表
 const ruleList = ref([])
+// 默认展开的树形节点
+const defaultExpandedKeys = ref([])
 // 树形权限列表高度
-const treeHight = window.innerHeight - 170
+const treeHight = window.innerHeight - 180
 // 角色id
 const roleId = ref(0)
+// 角色权限id
+const ruleIds = ref([])
 // 打开配置权限抽屉
 const openSetRole = row => {
     roleId.value = row.id
     getRuleList(1).then(res => {
         ruleList.value = res.list
+        defaultExpandedKeys.value = res.list.map(o => o.id)
         setRoleDrawerRef.value.open()
+        ruleIds.value = row.rules.map(o => o.id)
+        setTimeout(() => {
+            treeRef.value.setCheckedKeys(ruleIds.value)
+        }, 150)
     })
 }
 // 配置权限提交按钮
