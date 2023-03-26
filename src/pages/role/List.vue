@@ -75,7 +75,9 @@
                 :default-expanded-keys="defaultExpandedKeys"
                 :props="{ label: 'name', children: 'child' }"
                 show-checkbox
+                :check-strictly="checkStrictly"
                 :height="treeHight"
+                @check="handleTreeCheck"
             >
                 <template #default="{ data }">
                     <div class="flex items-center">
@@ -92,8 +94,16 @@
 
 <script setup>
 import { ref } from 'vue'
-import { getRoleList, createRole, updateRole, deleteRole, updateRoleStatus } from '~/api/role.js'
+import {
+    getRoleList,
+    createRole,
+    updateRole,
+    deleteRole,
+    updateRoleStatus,
+    updateRuleRole
+} from '~/api/role.js'
 import { getRuleList } from '~/api/rule.js'
+import { toast } from '~/utils/util.js'
 import Drawer from '~/components/Drawer.vue'
 import ListHeader from '~/components/ListHeader.vue'
 import { initTableData, initForm } from '~/utils/useCommon.js'
@@ -135,6 +145,8 @@ const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, han
 const setRoleDrawerRef = ref(null)
 // 树形权限Ref
 const treeRef = ref(null)
+// 是否严格的父子节点不关联
+const checkStrictly = ref(false)
 // 树形权限列表
 const ruleList = ref([])
 // 默认展开的树形节点
@@ -147,6 +159,7 @@ const roleId = ref(0)
 const ruleIds = ref([])
 // 打开配置权限抽屉
 const openSetRole = row => {
+    checkStrictly.value = true
     roleId.value = row.id
     getRuleList(1).then(res => {
         ruleList.value = res.list
@@ -155,12 +168,29 @@ const openSetRole = row => {
         ruleIds.value = row.rules.map(o => o.id)
         setTimeout(() => {
             treeRef.value.setCheckedKeys(ruleIds.value)
+            checkStrictly.value = false
         }, 150)
     })
 }
 // 配置权限提交按钮
 const handleSetRoleSubmit = () => {
-    console.log('配置权限')
+    setRoleDrawerRef.value.loadOn()
+    updateRuleRole(roleId.value, ruleIds.value)
+        .then(() => {
+            setRoleDrawerRef.value.close()
+            toast('配置成功！')
+            getData()
+        })
+        .finally(() => {
+            setRoleDrawerRef.value.loadOff()
+        })
+}
+// 树形权限勾选
+const handleTreeCheck = (...e) => {
+    // ...e 代表传入的参数是一个数组
+    const { checkedKeys, halfCheckedKeys } = e[1]
+    // 使用...展开运算符，将数组转换为多个参数合并赋值给ruleIds.value
+    ruleIds.value = [...checkedKeys, ...halfCheckedKeys]
 }
 </script>
 
