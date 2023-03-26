@@ -18,7 +18,9 @@
             </el-table-column>
             <el-table-column label="操作" align="right">
                 <template #default="scope">
-                    <el-button text type="primary" size="small"> 配置权限 </el-button>
+                    <el-button text type="primary" size="small" @click="openSetRole(scope.row)">
+                        配置权限
+                    </el-button>
                     <el-button text type="primary" size="small" @click="handleEdit(scope.row)">
                         修改
                     </el-button>
@@ -64,11 +66,22 @@
                 </el-form-item>
             </el-form>
         </Drawer>
+        <!-- 配置权限抽屉 -->
+        <Drawer ref="setRoleDrawerRef" title="权限配置" @submit="handleSetRoleSubmit">
+            <el-tree-v2
+                :data="ruleList"
+                :props="{ label: 'name', children: 'child' }"
+                show-checkbox
+                :height="treeHight"
+            />
+        </Drawer>
     </el-card>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { getRoleList, createRole, updateRole, deleteRole, updateRoleStatus } from '~/api/role.js'
+import { getRuleList } from '~/api/rule.js'
 import Drawer from '~/components/Drawer.vue'
 import ListHeader from '~/components/ListHeader.vue'
 import { initTableData, initForm } from '~/utils/useCommon.js'
@@ -106,6 +119,26 @@ const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, han
         update: updateRole,
         loading
     })
+// 配置权限抽屉
+const setRoleDrawerRef = ref(null)
+// 树形权限列表
+const ruleList = ref([])
+// 树形权限列表高度
+const treeHight = window.innerHeight - 170
+// 角色id
+const roleId = ref(0)
+// 打开配置权限抽屉
+const openSetRole = row => {
+    roleId.value = row.id
+    getRuleList(1).then(res => {
+        ruleList.value = res.list
+        setRoleDrawerRef.value.open()
+    })
+}
+// 配置权限提交按钮
+const handleSetRoleSubmit = () => {
+    console.log('配置权限')
+}
 </script>
 
 <style scoped></style>
