@@ -47,16 +47,20 @@
         </div>
         <Drawer ref="drawerRef" :title="drawerTitle" @submit="handleSubmit">
             <el-form ref="formRef" :model="form" :rules="rules" label-width="80px" :inline="false">
-                <el-form-item label="公告标题" prop="title">
-                    <el-input v-model="form.title" placeholder="公告标题"></el-input>
+                <el-form-item label="角色名称" prop="name">
+                    <el-input v-model="form.name" placeholder="角色名称"></el-input>
                 </el-form-item>
-                <el-form-item label="公告内容" prop="content">
+                <el-form-item label="角色描述" prop="desc">
                     <el-input
-                        v-model="form.content"
+                        v-model="form.desc"
                         :rows="5"
                         type="textarea"
-                        placeholder="公告内容"
+                        placeholder="角色描述"
                     />
+                </el-form-item>
+                <el-form-item label="状态" prop="status">
+                    <el-switch v-model="form.status" :active-value="1" :inactive-value="0">
+                    </el-switch>
                 </el-form-item>
             </el-form>
         </Drawer>
@@ -85,21 +89,15 @@ const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, han
     initForm({
         getData,
         form: {
-            title: '',
-            content: ''
+            name: '',
+            desc: '',
+            status: 1
         },
         rules: {
-            title: [
+            name: [
                 {
                     required: true,
-                    message: '请输入公告标题',
-                    trigger: 'blur'
-                }
-            ],
-            content: [
-                {
-                    required: true,
-                    message: '请输入公告内容',
+                    message: '角色名称不能为空！',
                     trigger: 'blur'
                 }
             ]
