@@ -14,3 +14,11 @@ export function deleteRole(id) {
 export function updateRoleStatus(id, status) {
     return axios.post(`/admin/role/${id}/update_status`, { status })
 }
+// eslint-disable-next-line camelcase
+export function updateRuleRole(id, rule_ids) {
+    return axios.post(`/admin/role/set_rules`, {
+        id,
+        // eslint-disable-next-line camelcase
+        rule_ids
+    })
+}
