@@ -9,6 +9,7 @@ export function updateSku(id, data) {
     return axios.post(`/admin/skus/${id}`, data)
 }
 export function deleteSku(ids) {
+    ids = Array.isArray(ids) ? ids : [ids]
     return axios.post(`/admin/skus/delete_all`, { ids })
 }
 export function updateSkuStatus(id, status) {
