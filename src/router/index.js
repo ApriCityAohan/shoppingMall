@@ -89,6 +89,12 @@ const routeVlaue = [
         name: '/role/list',
         component: () => import('~/pages/role/List.vue'),
         meta: { title: '角色管理' }
+    },
+    {
+        path: '/skus/list',
+        name: '/skus/list',
+        component: () => import('~/pages/skus/List.vue'),
+        meta: { title: '规格管理' }
     }
 ]
 export const router = createRouter({
