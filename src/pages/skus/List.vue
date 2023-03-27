@@ -1,6 +1,6 @@
 <template>
     <el-card shadow="never">
-        <ListHeader @create="handleAdd" @refresh="getData" />
+        <ListHeader layout="create,delete,refresh" @create="handleAdd" @refresh="getData" />
         <el-table v-loading="loading" :data="tableData" stripe style="width: 100%">
             <el-table-column type="selection" width="55" />
             <el-table-column prop="name" label="规格名称" width="150" />
