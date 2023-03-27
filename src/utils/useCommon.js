@@ -1,6 +1,6 @@
 import { ref, reactive, computed } from 'vue'
 import { toast } from '~/utils/util.js'
-// 列表、分页、搜索
+// 列表、分页、搜索、删除、修改状态
 export function initTableData(opt = {}) {
     // 搜索表单处理
     let searchForm = null
