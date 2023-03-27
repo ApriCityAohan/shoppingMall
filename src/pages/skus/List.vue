@@ -46,7 +46,7 @@
                 @current-change="getData"
             />
         </div>
-        <Drawer ref="drawerRef" :title="drawerTitle" @submit="handleSubmit">
+        <Drawer ref="drawerRef" destroy-on-close :title="drawerTitle" @submit="handleSubmit">
             <el-form ref="formRef" :model="form" :rules="rules" label-width="80px" :inline="false">
                 <el-form-item label="规格名称" prop="name">
                     <el-input v-model="form.name" placeholder="规格名称"></el-input>
@@ -59,7 +59,7 @@
                     </el-switch>
                 </el-form-item>
                 <el-form-item label="规格值" prop="default">
-                    <el-input v-model="form.default" placeholder="规格值"></el-input>
+                    <TagInput v-model="form.default" />
                 </el-form-item>
             </el-form>
         </Drawer>
@@ -70,6 +70,7 @@
 import { getSkuList, createSku, updateSku, deleteSku, updateSkuStatus } from '~/api/skus.js'
 import Drawer from '~/components/Drawer.vue'
 import ListHeader from '~/components/ListHeader.vue'
+import TagInput from '~/components/TagInput.vue'
 import { initTableData, initForm } from '~/utils/useCommon.js'
 const { tableData, loading, currentPage, total, limit, getData, handleDelete, handleStatusChange } =
     initTableData({
