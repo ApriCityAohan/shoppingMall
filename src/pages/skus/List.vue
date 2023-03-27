@@ -3,16 +3,22 @@
         <ListHeader @create="handleAdd" @refresh="getData" />
         <el-table v-loading="loading" :data="tableData" stripe style="width: 100%">
             <el-table-column type="selection" width="55" />
-            <el-table-column prop="title" label="规格名称" />
-            <el-table-column prop="create_time" label="规格值" />
-            <el-table-column prop="create_time" label="排序" />
-            <el-table-column prop="create_time" label="状态">
+            <el-table-column prop="name" label="规格名称" width="150" />
+            <el-table-column prop="default" label="规格值" width="250" />
+            <el-table-column prop="order" label="排序" width="120" align="center" />
+            <el-table-column label="状态" width="120" align="center">
                 <template #default="{ row }">
-                    <el-switch v-model="row.status" :active-value="1" :inactive-value="0">
+                    <el-switch
+                        v-model="row.status"
+                        :active-value="1"
+                        :inactive-value="0"
+                        :loading="row.statusLoading"
+                        @change="handleStatusChange($event, row)"
+                    >
                     </el-switch>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="180" align="center">
+            <el-table-column label="操作" align="right">
                 <template #default="scope">
                     <el-button text type="primary" size="small" @click="handleEdit(scope.row)">
                         修改
@@ -42,16 +48,18 @@
         </div>
         <Drawer ref="drawerRef" :title="drawerTitle" @submit="handleSubmit">
             <el-form ref="formRef" :model="form" :rules="rules" label-width="80px" :inline="false">
-                <el-form-item label="公告标题" prop="title">
-                    <el-input v-model="form.title" placeholder="公告标题"></el-input>
+                <el-form-item label="规格名称" prop="name">
+                    <el-input v-model="form.name" placeholder="规格名称"></el-input>
                 </el-form-item>
-                <el-form-item label="公告内容" prop="content">
-                    <el-input
-                        v-model="form.content"
-                        :rows="5"
-                        type="textarea"
-                        placeholder="公告内容"
-                    />
+                <el-form-item label="排序" prop="order">
+                    <el-input-number v-model="form.order" :min="0" :max="10000" />
+                </el-form-item>
+                <el-form-item label="状态" prop="status">
+                    <el-switch v-model="form.status" :active-value="1" :inactive-value="0">
+                    </el-switch>
+                </el-form-item>
+                <el-form-item label="规格值" prop="default">
+                    <el-input v-model="form.default" placeholder="规格值"></el-input>
                 </el-form-item>
             </el-form>
         </Drawer>
@@ -63,33 +71,24 @@ import { getSkuList, createSku, updateSku, deleteSku, updateSkuStatus } from '~/
 import Drawer from '~/components/Drawer.vue'
 import ListHeader from '~/components/ListHeader.vue'
 import { initTableData, initForm } from '~/utils/useCommon.js'
-const { tableData, loading, currentPage, total, limit, getData, handleDelete } = initTableData({
-    getListFun: getSkuList,
-    delete: deleteSku,
-    updateStatus: updateSkuStatus
-})
+const { tableData, loading, currentPage, total, limit, getData, handleDelete, handleStatusChange } =
+    initTableData({
+        getListFun: getSkuList,
+        delete: deleteSku,
+        updateStatus: updateSkuStatus
+    })
 const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, handleSubmit } =
     initForm({
         getData,
         form: {
-            title: '',
-            content: ''
+            name: '',
+            default: '',
+            order: 50,
+            status: 1
         },
         rules: {
-            title: [
-                {
-                    required: true,
-                    message: '请输入公告标题',
-                    trigger: 'blur'
-                }
-            ],
-            content: [
-                {
-                    required: true,
-                    message: '请输入公告内容',
-                    trigger: 'blur'
-                }
-            ]
+            name: [{ required: true, message: '请输入规格名称', trigger: 'blur' }],
+            default: [{ required: true, message: '规格值必填', trigger: 'blur' }]
         },
         create: createSku,
         update: updateSku,
