@@ -11,6 +11,6 @@ export function updateCoupon(id, data) {
 export function deleteCoupon(id) {
     return axios.post(`/admin/notice/${id}/delete`)
 }
-export function updateSkuStatus(id, status) {
+export function updateCouponStatus(id, status) {
     return axios.post(`/admin/coupon/${id}/update_status`, { status })
 }
