@@ -67,6 +67,29 @@ export function initTableData(opt = {}) {
                 row.statusLoading = false
             })
     }
+    // 多选Ids
+    const multiSelectionIds = ref([])
+    // 多选表格Ref
+    const multipleTableRef = ref(null)
+    // 多选删除事件
+    const handleSelectionChange = e => {
+        multiSelectionIds.value = e.map(o => o.id)
+    }
+    // 多选删除
+    const handleMultiDelete = () => {
+        loading.value = true
+        opt.delete(multiSelectionIds.value)
+            .then(res => {
+                toast('删除成功')
+                if (multipleTableRef.value) {
+                    multipleTableRef.value.clearSelection()
+                }
+                getData()
+            })
+            .finally(() => {
+                loading.value = false
+            })
+    }
     return {
         searchForm,
         handleResetSearch,
@@ -77,7 +100,10 @@ export function initTableData(opt = {}) {
         limit,
         getData,
         handleDelete,
-        handleStatusChange
+        handleStatusChange,
+        multipleTableRef,
+        handleSelectionChange,
+        handleMultiDelete
     }
 }
 // 新增、编辑

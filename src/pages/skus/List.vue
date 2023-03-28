@@ -79,19 +79,28 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import { getSkuList, createSku, updateSku, deleteSku, updateSkuStatus } from '~/api/skus.js'
-import { toast } from '~/utils/util.js'
 import Drawer from '~/components/Drawer.vue'
 import ListHeader from '~/components/ListHeader.vue'
 import TagInput from '~/components/TagInput.vue'
 import { initTableData, initForm } from '~/utils/useCommon.js'
-const { tableData, loading, currentPage, total, limit, getData, handleDelete, handleStatusChange } =
-    initTableData({
-        getListFun: getSkuList,
-        delete: deleteSku,
-        updateStatus: updateSkuStatus
-    })
+const {
+    tableData,
+    loading,
+    currentPage,
+    total,
+    limit,
+    getData,
+    handleDelete,
+    handleStatusChange,
+    multipleTableRef,
+    handleSelectionChange,
+    handleMultiDelete
+} = initTableData({
+    getListFun: getSkuList,
+    delete: deleteSku,
+    updateStatus: updateSkuStatus
+})
 const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, handleSubmit } =
     initForm({
         getData,
@@ -109,29 +118,6 @@ const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, han
         update: updateSku,
         loading
     })
-// 多选Ids
-const multiSelectionIds = ref([])
-// 多选表格Ref
-const multipleTableRef = ref(null)
-// 多选删除事件
-const handleSelectionChange = e => {
-    multiSelectionIds.value = e.map(o => o.id)
-}
-// 多选删除
-const handleMultiDelete = () => {
-    loading.value = true
-    deleteSku(multiSelectionIds.value)
-        .then(res => {
-            toast('删除成功')
-            if (multipleTableRef.value) {
-                multipleTableRef.value.clearSelection()
-            }
-            getData()
-        })
-        .finally(() => {
-            loading.value = false
-        })
-}
 </script>
 
 <style scoped></style>
