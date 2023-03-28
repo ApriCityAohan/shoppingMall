@@ -26,17 +26,35 @@
             <el-table-column prop="used" label="已使用" align="center" />
             <el-table-column label="操作" width="180" align="center">
                 <template #default="scope">
-                    <el-button text type="primary" size="small" @click="handleEdit(scope.row)">
+                    <el-button
+                        v-if="scope.row.statusText === '未开始'"
+                        text
+                        type="primary"
+                        size="small"
+                        @click="handleEdit(scope.row)"
+                    >
                         修改
                     </el-button>
                     <el-popconfirm
-                        title="是否要删除公告?"
+                        v-if="scope.row.statusText !== '领取中'"
+                        title="是否要删除优惠券?"
                         confirm-button-text="确认"
                         cancel-button-text="取消"
                         @confirm="handleDelete(scope.row.id)"
                     >
                         <template #reference>
                             <el-button text type="primary" size="small">删除</el-button>
+                        </template>
+                    </el-popconfirm>
+                    <el-popconfirm
+                        v-if="scope.row.statusText === '领取中'"
+                        title="是否要该优惠券失效?"
+                        confirm-button-text="失效"
+                        cancel-button-text="取消"
+                        @confirm="handleStatusChange(0, scope.row)"
+                    >
+                        <template #reference>
+                            <el-button type="danger" plain size="small">失效</el-button>
                         </template>
                     </el-popconfirm>
                 </template>
@@ -132,18 +150,19 @@ function formatStatus(row) {
     }
     return s
 }
-const { tableData, loading, currentPage, total, limit, getData, handleDelete } = initTableData({
-    getListFun: getCouponList,
-    delete: deleteCoupon,
-    updateStatus: updateCouponStatus,
-    onGetListSuccess: res => {
-        tableData.value = res.list.map(item => {
-            item.statusText = formatStatus(item)
-            return item
-        })
-        total.value = res.totalCount
-    }
-})
+const { tableData, loading, currentPage, total, limit, getData, handleDelete, handleStatusChange } =
+    initTableData({
+        getListFun: getCouponList,
+        delete: deleteCoupon,
+        updateStatus: updateCouponStatus,
+        onGetListSuccess: res => {
+            tableData.value = res.list.map(item => {
+                item.statusText = formatStatus(item)
+                return item
+            })
+            total.value = res.totalCount
+        }
+    })
 const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, handleSubmit } =
     initForm({
         getData,
