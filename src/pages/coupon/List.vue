@@ -86,9 +86,8 @@
                 <el-form-item label="优惠券名称" prop="name">
                     <el-date-picker
                         v-model="timeRange"
-                        :editable="false"
                         type="datetimerange"
-                        value-format="YYYY-MM-DD HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss"
                         start-placeholder="开始时间"
                         end-placeholder="结束时间"
                     />
@@ -160,15 +159,6 @@ const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, han
         rules: {},
         create: createCoupon,
         update: updateCoupon,
-        beforeSubmit: f => {
-            if (typeof f.start_time !== 'number') {
-                f.start_time = new Date(f.start_time).getTime()
-            }
-            if (typeof f.end_time !== 'number') {
-                f.end_time = new Date(f.end_time).getTime()
-            }
-            return f
-        },
         loading
     })
 const timeRange = computed({
