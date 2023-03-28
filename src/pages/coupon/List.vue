@@ -4,13 +4,16 @@
         <el-table v-loading="loading" :data="tableData" stripe style="width: 100%">
             <el-table-column label="优惠券名称" width="350">
                 <template #default="{ row }">
-                    <div class="border border-dashed rounded py-2 px-4">
+                    <div
+                        class="border border-dashed rounded py-2 px-4"
+                        :class="row.statusText === '领取中' ? 'active' : 'inactive'"
+                    >
                         <h5 class="font-bold text-sm">{{ row.name }}</h5>
                         <small>{{ row.start_time }} ~ {{ row.end_time }}</small>
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column prop="status" label="状态" align="center" />
+            <el-table-column prop="statusText" label="状态" align="center" />
             <el-table-column label="优惠" align="center">
                 <template #default="{ row }">
                     <span>
@@ -78,10 +81,31 @@ import {
 import Drawer from '~/components/Drawer.vue'
 import ListHeader from '~/components/ListHeader.vue'
 import { initTableData, initForm } from '~/utils/useCommon.js'
+function formatStatus(row) {
+    let s = '领取中'
+    const start = new Date(row.start_time).getTime()
+    const now = new Date().getTime()
+    const end = new Date(row.end_time).getTime()
+    if (start > now) {
+        s = '未开始'
+    } else if (end < now) {
+        s = '已结束'
+    } else if (row.status === 0) {
+        s = '已失效'
+    }
+    return s
+}
 const { tableData, loading, currentPage, total, limit, getData, handleDelete } = initTableData({
     getListFun: getCouponList,
     delete: deleteCoupon,
-    updateStatus: updateCouponStatus
+    updateStatus: updateCouponStatus,
+    onGetListSuccess: res => {
+        tableData.value = res.list.map(item => {
+            item.statusText = formatStatus(item)
+            return item
+        })
+        total.value = res.totalCount
+    }
 })
 const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, handleSubmit } =
     initForm({
@@ -112,4 +136,11 @@ const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, han
     })
 </script>
 
-<style scoped></style>
+<style scoped>
+.active {
+    @apply border-rose-200 bg-rose-50 text-red-400;
+}
+.inactive {
+    @apply border-gray-200 bg-gray-50 text-gray-400;
+}
+</style>
