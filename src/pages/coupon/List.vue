@@ -53,16 +53,51 @@
             />
         </div>
         <Drawer ref="drawerRef" :title="drawerTitle" @submit="handleSubmit">
-            <el-form ref="formRef" :model="form" :rules="rules" label-width="80px" :inline="false">
-                <el-form-item label="公告标题" prop="title">
-                    <el-input v-model="form.title" placeholder="公告标题"></el-input>
-                </el-form-item>
-                <el-form-item label="公告内容" prop="content">
+            <el-form ref="formRef" :model="form" :rules="rules" label-width="100px" :inline="false">
+                <el-form-item label="优惠券名称" prop="name">
                     <el-input
-                        v-model="form.content"
+                        v-model="form.name"
+                        placeholder="优惠券名称"
+                        style="width: 50%"
+                    ></el-input>
+                </el-form-item>
+                <el-form-item label="类型" prop="type">
+                    <el-radio-group v-model="form.type">
+                        <el-radio :label="0" border>满减</el-radio>
+                        <el-radio :label="1" border>折扣</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="面值" prop="value">
+                    <el-input v-model="form.value" placeholder="面值" class="w-50">
+                        <template #append>{{ form.type ? '折' : '元' }}</template>
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="发行量" prop="total">
+                    <el-input-number v-model="form.total" :min="1" :max="10000"> </el-input-number>
+                </el-form-item>
+                <el-form-item label="最低使用价格" prop="min_price">
+                    <el-input v-model="form.min_price" placeholder="优惠券名称" class="w-50">
+                        <template #append>元</template>
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="排序" prop="order">
+                    <el-input-number v-model="form.order" :min="1" :max="1000"> </el-input-number>
+                </el-form-item>
+                <el-form-item label="优惠券名称" prop="name">
+                    <el-date-picker
+                        v-model="timeRange"
+                        type="datetimerange"
+                        value-format="yyyy-MM-dd HH:mm:ss"
+                        start-placeholder="开始时间"
+                        end-placeholder="结束时间"
+                    />
+                </el-form-item>
+                <el-form-item label="描述" prop="desc">
+                    <el-input
+                        v-model="form.desc"
                         :rows="5"
                         type="textarea"
-                        placeholder="公告内容"
+                        placeholder="描述内容"
                     />
                 </el-form-item>
             </el-form>
@@ -71,6 +106,7 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import {
     getCouponList,
     createCoupon,
@@ -111,29 +147,29 @@ const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, han
     initForm({
         getData,
         form: {
-            title: '',
-            content: ''
+            name: '',
+            type: 0,
+            value: 0,
+            total: 100,
+            min_price: 0,
+            start_time: null,
+            end_time: null,
+            order: 50
         },
-        rules: {
-            title: [
-                {
-                    required: true,
-                    message: '请输入公告标题',
-                    trigger: 'blur'
-                }
-            ],
-            content: [
-                {
-                    required: true,
-                    message: '请输入公告内容',
-                    trigger: 'blur'
-                }
-            ]
-        },
+        rules: {},
         create: createCoupon,
         update: updateCoupon,
         loading
     })
+const timeRange = computed({
+    get() {
+        return form.start_time && form.end_time ? [form.start_time, form.end_time] : []
+    },
+    set(val) {
+        form.start_time = val[0]
+        form.end_time = val[1]
+    }
+})
 </script>
 
 <style scoped>
