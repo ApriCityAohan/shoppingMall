@@ -6,10 +6,10 @@ export function createCoupon(data) {
     return axios.post(`/admin/coupon`, data)
 }
 export function updateCoupon(id, data) {
-    return axios.post(`/admin/notice/${id}`, data)
+    return axios.post(`/admin/coupon/${id}`, data)
 }
 export function deleteCoupon(id) {
-    return axios.post(`/admin/notice/${id}/delete`)
+    return axios.post(`/admin/coupon/${id}/delete`)
 }
 export function updateCouponStatus(id, status) {
     return axios.post(`/admin/coupon/${id}/update_status`, { status })
