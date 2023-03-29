@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-tabs v-model="searchForm.tab" tab-position="top" @tab-change="getData">
+        <el-tabs v-model="searchForm.tab" @tab-change="getData">
             <el-tab-pane
                 v-for="(item, index) in tabBars"
                 :key="index"
@@ -34,55 +34,82 @@
             </div>
             <ListHeader @create="handleAdd" @refresh="getData" />
             <el-table v-loading="loading" :data="tableData" stripe style="width: 100%">
-                <el-table-column label="管理员" width="280">
+                <el-table-column label="商品" width="300">
                     <template #default="{ row }">
-                        <div class="flex items-center">
-                            <el-avatar :size="40" :src="row.avatar">
-                                <img
-                                    src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"
-                                />
-                            </el-avatar>
-                            <div class="ml-3">
-                                <h6>{{ row.username }}</h6>
-                                <small>ID:{{ row.id }}</small>
+                        <div class="flex">
+                            <el-image
+                                :src="row.cover"
+                                fit="cover"
+                                :lazy="true"
+                                style="width: 50px; height: 50px"
+                                class="mr-3 rounded"
+                            ></el-image>
+                            <div class="flex-1">
+                                <p>{{ row.title }}</p>
+                                <div>
+                                    <span class="text-rose-500">￥{{ row.min_price }}</span>
+                                    <el-divider direction="vertical" />
+                                    <span class="text-gray-500 text-xs">
+                                        ￥{{ row.min_oprice }}
+                                    </span>
+                                </div>
+                                <p class="text-xs mb-1 text-gray-400">
+                                    分类：{{ row.category ? row.category.name : '未分类' }}
+                                </p>
+                                <p class="text-xs text-gray-400">创建时间：{{ row.create_time }}</p>
                             </div>
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column label="所属角色" width="230" align="center">
+                <el-table-column label="实际销量" width="70" align="center" prop="sale_count" />
+                <el-table-column label="商品状态" width="100" align="center">
                     <template #default="{ row }">
-                        <span>{{ row.role?.name || '-' }}</span>
+                        <el-tag :type="row.status ? 'success' : 'danger'" size="small">
+                            {{ row.status ? '上架' : '仓库' }}
+                        </el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column label="状态" width="120">
+                <el-table-column label="审核状态" width="120" align="center">
                     <template #default="{ row }">
-                        <el-switch
-                            :model-value="row.status"
-                            :active-value="1"
-                            :inactive-value="0"
-                            :loading="row.statusLoading"
-                            :disabled="row.super === 1 ?? false"
-                            @change="handleStatusChange($event, row)"
-                        >
-                        </el-switch>
+                        <div v-if="row.ischeck === 0" class="flex flex-col">
+                            <el-button type="success" plain size="small">审核通过</el-button>
+                            <el-button
+                                type="danger"
+                                plain
+                                size="small"
+                                class="mt-2"
+                                style="margin-left: 0px !important"
+                            >
+                                审核拒绝
+                            </el-button>
+                        </div>
+                        <span v-else>{{ row.ischeck === 1 ? '同意' : '拒绝' }}</span>
                     </template>
                 </el-table-column>
+                <el-table-column label="总库存" align="center" prop="stock" width="90" />
                 <el-table-column label="操作" align="right">
                     <template #default="scope">
-                        <small v-if="scope.row.super === 1 ?? false" class="text-sm text-gray-500">
-                            暂无操作
-                        </small>
-                        <div v-else>
+                        <div>
                             <el-button
                                 text
                                 type="primary"
                                 size="small"
+                                class="px-1"
                                 @click="handleEdit(scope.row)"
                             >
                                 修改
                             </el-button>
+                            <el-button text type="primary" size="small" class="px-1">
+                                商品规格
+                            </el-button>
+                            <el-button text type="primary" size="small" class="px-1">
+                                设置轮播图
+                            </el-button>
+                            <el-button text type="primary" size="small" class="px-1">
+                                商品详情
+                            </el-button>
                             <el-popconfirm
-                                title="是否要删除该管理员?"
+                                title="是否要删除该商品?"
                                 confirm-button-text="确认"
                                 cancel-button-text="取消"
                                 @confirm="handleDelete(scope.row.id)"
@@ -167,6 +194,7 @@ const {
     limit,
     getData,
     handleDelete,
+    // eslint-disable-next-line no-unused-vars
     handleStatusChange
 } = initTableData({
     getListFun: getGoodsList,
