@@ -123,12 +123,12 @@
 <script setup>
 import { ref } from 'vue'
 import {
-    getManagerList,
-    updateManagerStatus,
-    createManager,
-    updateManager,
-    deleteManager
-} from '~/api/manager.js'
+    getGoodsList,
+    updateGoodsStatus,
+    createGoods,
+    updateGoods,
+    deleteGoods
+} from '~/api/goods.js'
 import Drawer from '~/components/Drawer.vue'
 import ChooseImage from '~/components/ChooseImage.vue'
 import ListHeader from '~/components/ListHeader.vue'
@@ -146,7 +146,7 @@ const {
     handleDelete,
     handleStatusChange
 } = initTableData({
-    getListFun: getManagerList,
+    getListFun: getGoodsList,
     searchForm: {
         keyword: ''
     },
@@ -158,8 +158,8 @@ const {
         total.value = res.totalCount
         roles.value = res.roles
     },
-    delete: deleteManager,
-    updateStatus: updateManagerStatus
+    delete: deleteGoods,
+    updateStatus: updateGoodsStatus
 })
 const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, handleSubmit } =
     initForm({
@@ -171,8 +171,8 @@ const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, han
             role_id: '',
             status: 0
         },
-        create: createManager,
-        update: updateManager,
+        create: createGoods,
+        update: updateGoods,
         loading
     })
 // 下拉框数据
