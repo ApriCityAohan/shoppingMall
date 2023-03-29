@@ -23,10 +23,35 @@
                                 ></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="8" :offset="8">
+                        <el-col v-if="showSearch" :span="8">
+                            <el-form-item label="商品分类">
+                                <el-select
+                                    v-model="searchForm.category_id"
+                                    placeholder="请选择商品类别"
+                                    clearable
+                                >
+                                    <el-option
+                                        v-for="item in categoryList"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.id"
+                                    >
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8" :offset="showSearch ? 0 : 8">
                             <div class="flex items-center justify-end">
                                 <el-button type="primary" @click="getData">搜索</el-button>
                                 <el-button @click="handleResetSearch">重置</el-button>
+                                <el-button text type="primary" @click="showSearch = !showSearch">
+                                    {{ showSearch ? '收起' : '展开' }}
+                                    <el-icon
+                                        class="transform transition-all ml-1"
+                                        :class="showSearch ? 'rotate-180' : ''"
+                                        ><ArrowUp
+                                    /></el-icon>
+                                </el-button>
                             </div>
                         </el-col>
                     </el-row>
@@ -185,6 +210,7 @@ import {
     updateGoods,
     deleteGoods
 } from '~/api/goods.js'
+import { getCategoryList } from '~/api/category'
 import Drawer from '~/components/Drawer.vue'
 import ChooseImage from '~/components/ChooseImage.vue'
 import ListHeader from '~/components/ListHeader.vue'
@@ -263,6 +289,12 @@ const tabBars = ref([
         key: 'delete'
     }
 ])
+// 下拉框数据
+const categoryList = ref([])
+// 获取分类列表
+getCategoryList().then(res => (categoryList.value = res))
+
+const showSearch = ref(false)
 </script>
 
 <style scoped></style>
