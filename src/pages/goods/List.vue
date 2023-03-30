@@ -12,7 +12,33 @@
 
         <el-card shadow="never">
             <div class="mb-3">
-                <el-form :model="searchForm" label-width="80px" size="small">
+                <Search :model="searchForm" @search="getData" @reset="handleResetSearch">
+                    <SearchItem label="关键字">
+                        <el-input
+                            v-model="searchForm.title"
+                            placeholder="商品名称"
+                            clearable
+                        ></el-input>
+                    </SearchItem>
+                    <template #moreSearch>
+                        <SearchItem label="商品分类">
+                            <el-select
+                                v-model="searchForm.category_id"
+                                placeholder="请选择商品类别"
+                                clearable
+                            >
+                                <el-option
+                                    v-for="item in categoryList"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id"
+                                >
+                                </el-option>
+                            </el-select>
+                        </SearchItem>
+                    </template>
+                </Search>
+                <!-- <el-form :model="searchForm" label-width="80px" size="small">
                     <el-row :gutter="20">
                         <el-col :span="8" :offset="0">
                             <el-form-item label="关键词">
@@ -55,7 +81,7 @@
                             </div>
                         </el-col>
                     </el-row>
-                </el-form>
+                </el-form> -->
             </div>
             <ListHeader @create="handleAdd" @refresh="getData" />
             <el-table v-loading="loading" :data="tableData" stripe style="width: 100%">
@@ -214,6 +240,8 @@ import { getCategoryList } from '~/api/category'
 import Drawer from '~/components/Drawer.vue'
 import ChooseImage from '~/components/ChooseImage.vue'
 import ListHeader from '~/components/ListHeader.vue'
+import Search from '~/components/Search.vue'
+import SearchItem from '~/components/SearchItem.vue'
 
 import { initTableData, initForm } from '~/utils/useCommon.js'
 const {
@@ -293,8 +321,6 @@ const tabBars = ref([
 const categoryList = ref([])
 // 获取分类列表
 getCategoryList().then(res => (categoryList.value = res))
-
-const showSearch = ref(false)
 </script>
 
 <style scoped></style>
