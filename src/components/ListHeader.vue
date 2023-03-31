@@ -19,6 +19,7 @@
                     <el-button type="danger" size="small"> 批量删除 </el-button>
                 </template>
             </el-popconfirm>
+            <slot />
         </div>
         <el-button v-if="btn.includes('refresh')" text size="small" @click="$emit('refresh')">
             <el-icon :size="20"><Refresh /></el-icon>

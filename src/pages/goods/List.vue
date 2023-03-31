@@ -38,8 +38,21 @@
                     </template>
                 </Search>
             </div>
-            <ListHeader @create="handleAdd" @refresh="getData" />
-            <el-table v-loading="loading" :data="tableData" stripe style="width: 100%">
+            <ListHeader
+                layout="create,refresh,delete"
+                @create="handleAdd"
+                @refresh="getData"
+                @delete="handleMultiDelete"
+            />
+            <el-table
+                ref="multipleTableRef"
+                v-loading="loading"
+                :data="tableData"
+                stripe
+                style="width: 100%"
+                @selection-change="handleSelectionChange"
+            >
+                <el-table-column type="selection" width="55" />
                 <el-table-column label="商品" width="300">
                     <template #default="{ row }">
                         <div class="flex">
@@ -244,7 +257,10 @@ const {
     getData,
     handleDelete,
     // eslint-disable-next-line no-unused-vars
-    handleStatusChange
+    handleStatusChange,
+    multipleTableRef,
+    handleSelectionChange,
+    handleMultiDelete
 } = initTableData({
     getListFun: getGoodsList,
     searchForm: {
