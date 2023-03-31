@@ -90,6 +90,20 @@ export function initTableData(opt = {}) {
                 loading.value = false
             })
     }
+    const handleMultiStatusChange = status => {
+        loading.value = true
+        opt.updateStatus(multiSelectionIds.value, status)
+            .then(res => {
+                toast('修改成功')
+                if (multipleTableRef.value) {
+                    multipleTableRef.value.clearSelection()
+                }
+                getData()
+            })
+            .finally(() => {
+                loading.value = false
+            })
+    }
     return {
         searchForm,
         handleResetSearch,
@@ -103,7 +117,8 @@ export function initTableData(opt = {}) {
         handleStatusChange,
         multipleTableRef,
         handleSelectionChange,
-        handleMultiDelete
+        handleMultiDelete,
+        handleMultiStatusChange
     }
 }
 // 新增、编辑
