@@ -43,7 +43,20 @@
                 @create="handleAdd"
                 @refresh="getData"
                 @delete="handleMultiDelete"
-            />
+            >
+                <el-button
+                    v-if="searchForm.tab == 'all' || searchForm.tab == 'off'"
+                    size="small"
+                    @click="handleMultiStatusChange(1)"
+                    >上架</el-button
+                >
+                <el-button
+                    v-if="searchForm.tab == 'all' || searchForm.tab == 'saling'"
+                    size="small"
+                    @click="handleMultiStatusChange(0)"
+                    >下架</el-button
+                >
+            </ListHeader>
             <el-table
                 ref="multipleTableRef"
                 v-loading="loading"
@@ -256,11 +269,10 @@ const {
     limit,
     getData,
     handleDelete,
-    // eslint-disable-next-line no-unused-vars
-    handleStatusChange,
     multipleTableRef,
     handleSelectionChange,
-    handleMultiDelete
+    handleMultiDelete,
+    handleMultiStatusChange
 } = initTableData({
     getListFun: getGoodsList,
     searchForm: {
