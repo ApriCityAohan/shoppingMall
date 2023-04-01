@@ -1,10 +1,22 @@
 <template>
     <div v-if="modelValue">
         <el-image
+            v-if="typeof modelValue === 'string'"
             :src="modelValue"
             fit="cover"
             class="w-[100px] h-[100px] border rounded"
         ></el-image>
+        <div v-else class="flex">
+            <div v-for="(url, index) in modelValue" :key="index" class="img-box">
+                <el-icon class="icon-class" @click="removeImage(url)"><CircleClose /></el-icon>
+                <el-image
+                    :src="url"
+                    fit="cover"
+                    :lazy="true"
+                    class="w-[100px] h-[100px] border rounded"
+                ></el-image>
+            </div>
+        </div>
     </div>
     <div class="choose-img-btn" @click="open">
         <el-icon :size="25" class="text-gray-400"><Plus /></el-icon>
@@ -58,7 +70,6 @@ const handleChange = id => {
 const openUploadDrawer = () => {
     handleImageRef.value.openUploadField()
 }
-// eslint-disable-next-line no-unused-vars
 const props = defineProps({
     modelValue: {
         type: [String, Array],
@@ -78,6 +89,13 @@ const submit = () => {
     }
     close()
 }
+// 删除图片
+const removeImage = url => {
+    emit(
+        'update:modelValue',
+        props.modelValue.filter(o => o !== url)
+    )
+}
 </script>
 
 <style scoped>
@@ -87,5 +105,12 @@ const submit = () => {
 .image-header {
     border-bottom: 1px solid #eeeeee;
     @apply flex items-center;
+}
+.img-box {
+    @apply relative w-[100px] h-[100px] mx-1 mb-3 rounded;
+}
+.icon-class {
+    z-index: 10;
+    @apply absolute top-[5px] right-[5px] bg-white rounded-full cursor-pointer;
 }
 </style>
