@@ -32,7 +32,11 @@ const form = reactive({
 const goodsId = ref(0)
 // 打开抽屉
 const open = row => {
-    drawerVisible.value = true
+    goodsId.value = row.id
+    readGoods(row.id).then(res => {
+        form.banners = res.goodsBanner.map(o => o.url)
+        drawerVisible.value = true
+    })
 }
 // 提交表单
 const onSubmit = () => {
