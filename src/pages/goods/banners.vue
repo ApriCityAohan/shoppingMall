@@ -33,15 +33,20 @@ const goodsId = ref(0)
 // 打开抽屉
 const open = row => {
     goodsId.value = row.id
-    readGoods(row.id).then(res => {
-        form.banners = res.goodsBanner.map(o => o.url)
-        drawerVisible.value = true
-    })
+    row.bannersLoading = true
+    readGoods(row.id)
+        .then(res => {
+            form.banners = res.goodsBanner.map(o => o.url)
+            drawerVisible.value = true
+        })
+        .finally(() => {
+            row.bannersLoading = false
+        })
 }
 // 加载状态
 const loading = ref(false)
 // 提交事件
-const emit = defineEmits(['refersData'])
+const emit = defineEmits(['refers'])
 // 提交表单
 const onSubmit = () => {
     loading.value = true
@@ -49,7 +54,7 @@ const onSubmit = () => {
         .then(() => {
             drawerVisible.value = false
             toast('设置轮播图成功')
-            emit(['refersData'])
+            emit('refers')
         })
         .finally(() => {
             loading.value = false

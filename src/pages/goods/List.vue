@@ -141,9 +141,10 @@
                             </el-button>
                             <el-button
                                 text
-                                type="primary"
+                                :type="scope.row.goods_banner.length === 0 ? 'danger' : 'primary'"
                                 size="small"
                                 class="px-1"
+                                :loading="scope.row.bannersLoading"
                                 @click="handleOpenBanners(scope.row)"
                             >
                                 设置轮播图
@@ -245,7 +246,7 @@
                 </el-form>
             </Drawer>
         </el-card>
-        <banners ref="bannersRef" @refers-data="getData" />
+        <banners ref="bannersRef" @refers="getData" />
     </div>
 </template>
 
@@ -290,7 +291,7 @@ const {
     },
     onGetListSuccess: res => {
         tableData.value = res.list.map(o => {
-            o.statusLoading = false
+            o.bannersLoading = false
             return o
         })
         total.value = res.totalCount
