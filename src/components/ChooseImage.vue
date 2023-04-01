@@ -103,7 +103,9 @@ const submit = () => {
             return toast('最多还能选择' + (props.limit - props.modelValue.length) + '张图片')
         }
     }
-
+    if (urls.length) {
+        emit('update:modelValue', value)
+    }
     close()
 }
 // 删除图片
