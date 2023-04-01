@@ -139,7 +139,13 @@
                             <el-button text type="primary" size="small" class="px-1">
                                 商品规格
                             </el-button>
-                            <el-button text type="primary" size="small" class="px-1">
+                            <el-button
+                                text
+                                type="primary"
+                                size="small"
+                                class="px-1"
+                                @click="handleOpenBanners(scope.row)"
+                            >
                                 设置轮播图
                             </el-button>
                             <el-button text type="primary" size="small" class="px-1">
@@ -239,6 +245,7 @@
                 </el-form>
             </Drawer>
         </el-card>
+        <banners ref="bannersRef" />
     </div>
 </template>
 
@@ -257,6 +264,7 @@ import ChooseImage from '~/components/ChooseImage.vue'
 import ListHeader from '~/components/ListHeader.vue'
 import Search from '~/components/Search.vue'
 import SearchItem from '~/components/SearchItem.vue'
+import banners from '~/pages/goods/banners.vue'
 
 import { initTableData, initForm } from '~/utils/useCommon.js'
 const {
@@ -341,6 +349,12 @@ const tabBars = ref([
 const categoryList = ref([])
 // 获取分类列表
 getCategoryList().then(res => (categoryList.value = res))
+// bannersRef
+const bannersRef = ref(null)
+// 打开banners
+const handleOpenBanners = row => {
+    bannersRef.value.open(row)
+}
 </script>
 
 <style scoped></style>
