@@ -107,7 +107,7 @@ const removeImage = url => {
     @apply flex items-center;
 }
 .img-box {
-    @apply relative w-[100px] h-[100px] mx-1 mb-3 rounded;
+    @apply relative w-[100px] h-[100px] mx-1 mb-2 rounded;
 }
 .icon-class {
     z-index: 10;
