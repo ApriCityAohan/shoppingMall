@@ -8,7 +8,7 @@
     >
         <el-form :model="form" label-width="80px">
             <el-form-item label="轮播图">
-                <choose-image v-model="form.banners" />
+                <choose-image v-model="form.banners" :limit="9" />
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onSubmit">立即创建</el-button>

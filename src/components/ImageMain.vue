@@ -147,10 +147,14 @@ const handleDelete = id => {
 const handleSuccess = () => {
     getList(1)
 }
-defineProps({
+const props = defineProps({
     checkbox: {
         type: Boolean,
         default: false
+    },
+    limit: {
+        type: Number,
+        default: 1
     }
 })
 const emit = defineEmits(['choose'])
@@ -158,9 +162,9 @@ const emit = defineEmits(['choose'])
 const checkImage = computed(() => list.value.filter(o => o.checked))
 // checkbox选择
 const handleChooseCheck = item => {
-    if (item.checked && checkImage.value.length > 1) {
+    if (item.checked && checkImage.value.length > props.limit) {
         item.checked = false
-        return toast('只能选择一张图片', 'error')
+        return toast(`只能选择${props.limit}图片`, 'error')
     }
     emit('choose', checkImage.value)
 }

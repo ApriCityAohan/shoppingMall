@@ -31,7 +31,12 @@
             </el-header>
             <el-container>
                 <ImageAside ref="handleOpenDrawer" @change="handleChange" />
-                <ImageMain ref="handleImageRef" :checkbox="true" @choose="handleChoose" />
+                <ImageMain
+                    ref="handleImageRef"
+                    :limit="limit"
+                    :checkbox="true"
+                    @choose="handleChoose"
+                />
             </el-container>
         </el-container>
         <template #footer>
@@ -47,6 +52,7 @@
 import { ref } from 'vue'
 import ImageAside from '~/components/ImageAside.vue'
 import ImageMain from '~/components/ImageMain.vue'
+import { toast } from '~/utils/util'
 const dialogVisible = ref(false)
 
 const open = () => (dialogVisible.value = true)
@@ -74,6 +80,10 @@ const props = defineProps({
     modelValue: {
         type: [String, Array],
         default: ''
+    },
+    limit: {
+        type: Number,
+        default: 1
     }
 })
 const emit = defineEmits(['update:modelValue'])
@@ -84,9 +94,16 @@ const handleChoose = e => {
     urls = e.map(o => o.url)
 }
 const submit = () => {
-    if (urls.length) {
-        emit('update:modelValue', urls[0])
+    let value = []
+    if (props.limit === 1) {
+        value = urls[0]
+    } else {
+        value = [...props.modelValue, ...urls]
+        if (value.length > props.limit) {
+            return toast('最多还能选择' + (props.limit - props.modelValue.length) + '张图片')
+        }
     }
+
     close()
 }
 // 删除图片
