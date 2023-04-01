@@ -245,7 +245,7 @@
                 </el-form>
             </Drawer>
         </el-card>
-        <banners ref="bannersRef" />
+        <banners ref="bannersRef" @refers-data="getData" />
     </div>
 </template>
 

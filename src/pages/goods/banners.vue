@@ -20,8 +20,8 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import ChooseImage from '~/components/ChooseImage.vue'
-// eslint-disable-next-line no-unused-vars
 import { readGoods, setGoodsBanner } from '~/api/goods'
+import { toast } from '~/utils/util'
 // 控制抽屉的显示与隐藏
 const drawerVisible = ref(false)
 // 表单数据
@@ -38,9 +38,22 @@ const open = row => {
         drawerVisible.value = true
     })
 }
+// 加载状态
+const loading = ref(false)
+// 提交事件
+const emit = defineEmits(['refersData'])
 // 提交表单
 const onSubmit = () => {
-    console.log(form)
+    loading.value = true
+    setGoodsBanner(goodsId.value, form)
+        .then(() => {
+            drawerVisible.value = false
+            toast('设置轮播图成功')
+            emit(['refersData'])
+        })
+        .finally(() => {
+            loading.value = false
+        })
 }
 // 暴露给父组件的方法
 defineExpose({
