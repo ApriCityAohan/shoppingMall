@@ -126,6 +126,10 @@ const removeImage = url => {
         props.modelValue.filter(o => o !== url)
     )
 }
+defineExpose({
+    open,
+    close
+})
 </script>
 
 <style scoped>
