@@ -54,7 +54,7 @@ const init = {
     menubar: false, // 隐藏菜单栏
     autoresize_bottom_margin: 50,
     max_height: 500,
-    min_height: 450,
+    min_height: 400,
     // height: 320,
     toolbar_mode: 'none',
     plugins:
