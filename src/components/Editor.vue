@@ -1,9 +1,11 @@
 <template>
     <editor v-model="content" tag-name="div" :init="init" />
+    <choose-image ref="chooseImgRef" :limit="9" />
 </template>
 <script setup>
 import tinymce from 'tinymce/tinymce'
 import Editor from '@tinymce/tinymce-vue'
+import ChooseImage from '~/components/ChooseImage.vue'
 import { ref, watch } from 'vue'
 import 'tinymce/themes/silver/theme' // 引用主题文件
 import 'tinymce/icons/default' // 引用图标文件
@@ -60,7 +62,7 @@ const init = {
     plugins:
         'wordcount visualchars visualblocks template searchreplace save quickbars preview pagebreak nonbreaking media insertdatetime importcss image help fullscreen directionality codesample code charmap link code table lists advlist anchor autolink autoresize autosave',
     toolbar:
-        'formats undo redo fontsizeselect fontselect ltr rtl searchreplace media | outdent indent aligncenter alignleft alignright alignjustify lineheight underline quicklink h2 h3 blockquote numlist bullist table removeformat forecolor backcolor bold italic strikethrough hr link preview fullscreen help ',
+        'formats undo redo fontsizeselect fontselect ltr rtl searchreplace media imageUpload | outdent indent aligncenter alignleft alignright alignjustify lineheight underline quicklink h2 h3 blockquote numlist bullist table removeformat forecolor backcolor bold italic strikethrough hr link preview fullscreen help ',
     content_style: 'p {margin: 5px 0; font-size: 14px}',
     fontsize_formats: '12px 14px 16px 18px 24px 36px 48px 56px 72px',
     font_formats:
@@ -68,7 +70,19 @@ const init = {
     branding: false,
     elementpath: false,
     resize: false, // 禁止改变大小
-    statusbar: false // 隐藏底部状态栏
+    statusbar: false, // 隐藏底部状态栏
+    setup: editor => {
+        editor.ui.registry.addButton('imageUpload', {
+            icon: 'image',
+            tooltip: '上传图片',
+            onAction: () => {
+                editor.insertContent(
+                    '<img src="https://www.baidu.com/img/PCfb_5bf082d29588c07f842ccde3f97243ea.png" />'
+                )
+            }
+        })
+        console.log(editor)
+    }
 }
 // eslint-disable-next-line no-unused-expressions
 tinymce.init // 初始化
