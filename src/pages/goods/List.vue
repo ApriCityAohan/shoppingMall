@@ -149,7 +149,14 @@
                             >
                                 设置轮播图
                             </el-button>
-                            <el-button text type="primary" size="small" class="px-1">
+                            <el-button
+                                text
+                                :type="!scope.row.content ? 'danger' : 'primary'"
+                                size="small"
+                                class="px-1"
+                                :loading="scope.row.contentLoading"
+                                @click="handleOpenContent(scope.row)"
+                            >
                                 商品详情
                             </el-button>
                             <el-popconfirm
@@ -247,6 +254,7 @@
             </Drawer>
         </el-card>
         <banners ref="bannersRef" @refers="getData" />
+        <content ref="contentRef" @refers="getData" />
     </div>
 </template>
 
@@ -266,6 +274,7 @@ import ListHeader from '~/components/ListHeader.vue'
 import Search from '~/components/Search.vue'
 import SearchItem from '~/components/SearchItem.vue'
 import banners from '~/pages/goods/banners.vue'
+import content from '~/pages/goods/content.vue'
 
 import { initTableData, initForm } from '~/utils/useCommon.js'
 const {
@@ -292,6 +301,7 @@ const {
     onGetListSuccess: res => {
         tableData.value = res.list.map(o => {
             o.bannersLoading = false
+            o.contentLoading = false
             return o
         })
         total.value = res.totalCount
@@ -355,6 +365,12 @@ const bannersRef = ref(null)
 // 打开banners
 const handleOpenBanners = row => {
     bannersRef.value.open(row)
+}
+// contentRef
+const contentRef = ref(null)
+// 打开content
+const handleOpenContent = row => {
+    contentRef.value.open(row)
 }
 </script>
 
