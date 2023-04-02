@@ -1,5 +1,5 @@
 <template>
-    <div v-if="modelValue">
+    <div v-if="modelValue && preview">
         <el-image
             v-if="typeof modelValue === 'string'"
             :src="modelValue"
@@ -18,7 +18,7 @@
             </div>
         </div>
     </div>
-    <div class="choose-img-btn" @click="open">
+    <div v-if="preview" class="choose-img-btn" @click="open">
         <el-icon :size="25" class="text-gray-400"><Plus /></el-icon>
     </div>
     <el-dialog v-model="dialogVisible" title="选择图片" width="80%" top="5vh">
@@ -54,8 +54,11 @@ import ImageAside from '~/components/ImageAside.vue'
 import ImageMain from '~/components/ImageMain.vue'
 import { toast } from '~/utils/util'
 const dialogVisible = ref(false)
-
-const open = () => (dialogVisible.value = true)
+const callbackFun = ref(null)
+const open = callback => {
+    callbackFun.value = callback
+    dialogVisible.value = true
+}
 
 const close = () => (dialogVisible.value = false)
 
@@ -84,6 +87,10 @@ const props = defineProps({
     limit: {
         type: Number,
         default: 1
+    },
+    preview: {
+        type: Boolean,
+        default: true
     }
 })
 const emit = defineEmits(['update:modelValue'])
@@ -98,13 +105,17 @@ const submit = () => {
     if (props.limit === 1) {
         value = urls[0]
     } else {
-        value = [...props.modelValue, ...urls]
+        value = props.preview ? [...props.modelValue, ...urls] : [...urls]
         if (value.length > props.limit) {
-            return toast('最多还能选择' + (props.limit - props.modelValue.length) + '张图片')
+            const limit = props.preview ? props.limit - props.modelValue.length : props.limit
+            return toast('最多还能选择' + limit + '张图片')
         }
     }
-    if (urls.length) {
+    if (value && props.preview) {
         emit('update:modelValue', value)
+    }
+    if (value && !props.preview) {
+        callbackFun.value(value)
     }
     close()
 }
