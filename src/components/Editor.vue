@@ -1,6 +1,6 @@
 <template>
     <editor v-model="content" tag-name="div" :init="init" />
-    <choose-image ref="chooseImgRef" :limit="9" />
+    <choose-image ref="chooseImgRef" :limit="9" :preview="false" />
 </template>
 <script setup>
 import tinymce from 'tinymce/tinymce'
@@ -47,6 +47,7 @@ const props = defineProps({
     modelValue: String
 })
 const emit = defineEmits(['update:modelValue'])
+const chooseImgRef = ref(null)
 // 配置
 const init = {
     language_url: '/tinymce/langs/zh-Hans.js', // 中文语言包路径
@@ -75,10 +76,12 @@ const init = {
         editor.ui.registry.addButton('imageUpload', {
             icon: 'image',
             tooltip: '上传图片',
-            onAction: () => {
-                editor.insertContent(
-                    '<img src="https://www.baidu.com/img/PCfb_5bf082d29588c07f842ccde3f97243ea.png" />'
-                )
+            onAction() {
+                chooseImgRef.value.open(data => {
+                    data.forEach(url => {
+                        editor.insertContent(`<img src="${url}" />`)
+                    })
+                })
             }
         })
         console.log(editor)
