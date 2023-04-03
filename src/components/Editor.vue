@@ -84,7 +84,7 @@ const init = {
                 })
             }
         })
-        console.log(editor)
+        // console.log(editor)
     }
 }
 // eslint-disable-next-line no-unused-expressions
