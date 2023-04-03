@@ -136,7 +136,14 @@
                             >
                                 修改
                             </el-button>
-                            <el-button text type="primary" size="small" class="px-1">
+                            <el-button
+                                text
+                                type="primary"
+                                size="small"
+                                class="px-1"
+                                :loading="scope.row.skuLoading"
+                                @click="handleOpenSku(scope.row)"
+                            >
                                 商品规格
                             </el-button>
                             <el-button
@@ -255,6 +262,7 @@
         </el-card>
         <banners ref="bannersRef" @refers="getData" />
         <content ref="contentRef" @refers="getData" />
+        <skus ref="skusRef" @refers="getData" />
     </div>
 </template>
 
@@ -275,6 +283,7 @@ import Search from '~/components/Search.vue'
 import SearchItem from '~/components/SearchItem.vue'
 import banners from '~/pages/goods/banners.vue'
 import content from '~/pages/goods/content.vue'
+import skus from '~/pages/goods/skus.vue'
 
 import { initTableData, initForm } from '~/utils/useCommon.js'
 const {
@@ -302,6 +311,7 @@ const {
         tableData.value = res.list.map(o => {
             o.bannersLoading = false
             o.contentLoading = false
+            o.skuLoading = false
             return o
         })
         total.value = res.totalCount
@@ -371,6 +381,12 @@ const contentRef = ref(null)
 // 打开content
 const handleOpenContent = row => {
     contentRef.value.open(row)
+}
+// ckusRef
+const skusRef = ref(null)
+// 打开content
+const handleOpenSku = row => {
+    skusRef.value.open(row)
 }
 </script>
 
