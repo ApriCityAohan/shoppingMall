@@ -34,7 +34,9 @@
                     </el-input>
                 </el-form-item>
             </template>
-            <template v-else> 多规格 </template>
+            <template v-else>
+                <SkuCard />
+            </template>
         </el-form>
     </Drawer>
 </template>
@@ -42,6 +44,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import Drawer from '~/components/Drawer.vue'
+import SkuCard from '~/pages/goods/components/skuCard.vue'
 import { readGoods, updateGoodSku } from '~/api/goods'
 import { toast } from '~/utils/util'
 // 抽屉Ref

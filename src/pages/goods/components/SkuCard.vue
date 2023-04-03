@@ -1,0 +1,34 @@
+<template>
+    <el-form-item label="添加规格">
+        <el-card shadow="never" class="mb-3 w-full">
+            <template #header>
+                <div class="flex items-center">
+                    <el-input placeholder="商品规格" style="width: 200px">
+                        <template #append>
+                            <el-icon>
+                                <more />
+                            </el-icon>
+                        </template>
+                    </el-input>
+                    <el-button size="small" class="ml-auto">
+                        <el-icon><Top /></el-icon>
+                    </el-button>
+                    <el-button size="small">
+                        <el-icon><Bottom /></el-icon>
+                    </el-button>
+                    <el-button size="small">
+                        <el-icon><Delete /></el-icon>
+                    </el-button>
+                </div>
+            </template>
+            <SkuCardItem />
+        </el-card>
+        <el-button type="success" size="small">添加规格</el-button>
+    </el-form-item>
+</template>
+
+<script setup>
+import SkuCardItem from './SkuCardItem.vue'
+</script>
+
+<style scoped></style>
