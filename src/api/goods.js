@@ -33,3 +33,7 @@ export function setGoodsBanner(id, data) {
 export function updateGoodSku(id, data) {
     return axios.post(`/admin/goods/updateskus/${id}`, data)
 }
+// 创建多规格商品规格选项
+export function createGoodSku(data) {
+    return axios.post(`/admin/goods_skus_card`, data)
+}
