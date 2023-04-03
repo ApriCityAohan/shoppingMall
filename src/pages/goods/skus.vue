@@ -3,34 +3,34 @@
         <el-form :model="form">
             <el-form-item label="规格类型">
                 <el-radio-group v-model="form.sku_type">
-                    <el-radio label="0">单规格</el-radio>
-                    <el-radio label="1">多规格</el-radio>
+                    <el-radio :label="0" border>单规格</el-radio>
+                    <el-radio :label="1" border>多规格</el-radio>
                 </el-radio-group>
             </el-form-item>
             <template v-if="form.sku_type === 0">
                 <el-form-item label="市场价格">
-                    <el-input v-model="form.sku_value.oprice" type="number">
-                        <template #prepend>元</template>
+                    <el-input v-model="form.sku_value.oprice" type="number" style="width: 35%">
+                        <template #append>元</template>
                     </el-input>
                 </el-form-item>
                 <el-form-item label="销售价格">
-                    <el-input v-model="form.sku_value.pprice" type="number">
-                        <template #prepend>元</template>
+                    <el-input v-model="form.sku_value.pprice" type="number" style="width: 35%">
+                        <template #append>元</template>
                     </el-input>
                 </el-form-item>
                 <el-form-item label="成本价格">
-                    <el-input v-model="form.sku_value.cprice" type="number">
-                        <template #prepend>元</template>
+                    <el-input v-model="form.sku_value.cprice" type="number" style="width: 35%">
+                        <template #append>元</template>
                     </el-input>
                 </el-form-item>
                 <el-form-item label="商品重量">
-                    <el-input v-model="form.sku_value.weight" type="number">
-                        <template #prepend>公斤</template>
+                    <el-input v-model="form.sku_value.weight" type="number" style="width: 35%">
+                        <template #append>公斤</template>
                     </el-input>
                 </el-form-item>
                 <el-form-item label="商品体积">
-                    <el-input v-model="form.sku_value.volume" type="number">
-                        <template #prepend>立方米</template>
+                    <el-input v-model="form.sku_value.volume" type="number" style="width: 35%">
+                        <template #append>立方米</template>
                     </el-input>
                 </el-form-item>
             </template>
@@ -48,7 +48,7 @@ import { toast } from '~/utils/util'
 const drawerRef = ref(null)
 // 表单数据
 const form = reactive({
-    sku_type: 1, // 规格类型：0单规格1多规格
+    sku_type: 0, // 规格类型：0单规格1多规格
     sku_value: {
         oprice: 0,
         pprice: 0,
@@ -67,6 +67,7 @@ const open = row => {
         .then(res => {
             // console.log(res)
             form.sku_type = res.sku_type
+            console.log(form.sku_type)
             form.sku_value = res.sku_value || {
                 oprice: 0,
                 pprice: 0,
