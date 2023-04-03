@@ -47,6 +47,7 @@ import Drawer from '~/components/Drawer.vue'
 import SkuCard from '~/pages/goods/components/skuCard.vue'
 import { readGoods, updateGoodSku } from '~/api/goods'
 import { toast } from '~/utils/util'
+import { goodsId, initSkuCardList } from '~/utils/useSku'
 // 抽屉Ref
 const drawerRef = ref(null)
 // 表单数据
@@ -60,8 +61,6 @@ const form = reactive({
         volume: 0
     }
 })
-// 商品id
-const goodsId = ref(0)
 // 打开抽屉
 const open = row => {
     goodsId.value = row.id
@@ -78,6 +77,7 @@ const open = row => {
                 weight: 0,
                 volume: 0
             }
+            initSkuCardList(res)
             drawerRef.value.open()
         })
         .finally(() => {
