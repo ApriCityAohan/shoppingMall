@@ -31,4 +31,8 @@
 import SkuCardItem from './SkuCardItem.vue'
 </script>
 
-<style scoped></style>
+<style>
+.el-card__header {
+    @apply !p-2 bg-gray-50;
+}
+</style>
