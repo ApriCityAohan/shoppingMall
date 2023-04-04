@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 // eslint-disable-next-line no-unused-vars
 import { createGoodSku, updateGoodSkuCard, deleteGoodSkuCard } from '~/api/goods.js'
+import { isArrayMoveUp, isArrayMoveDown } from '~/utils/util.js'
 // 商品id
 export const goodsId = ref(0)
 // 商品sku list
@@ -51,7 +52,7 @@ export function updateGoodSkuOption(item) {
         .then(res => {
             item.name = res.text
         })
-        .cache(() => {
+        .catch(() => {
             item.text = item.name
         })
         .finally(() => {
