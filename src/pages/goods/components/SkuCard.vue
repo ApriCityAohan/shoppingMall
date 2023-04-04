@@ -3,7 +3,12 @@
         <el-card v-for="item in skuCardList" :key="item.id" shadow="never" class="mb-3 w-full">
             <template #header>
                 <div class="flex items-center">
-                    <el-input v-model="item.text" placeholder="商品规格" style="width: 200px">
+                    <el-input
+                        v-model="item.text"
+                        placeholder="商品规格"
+                        style="width: 200px"
+                        @change="updateGoodSkuOption(item)"
+                    >
                         <template #append>
                             <el-icon>
                                 <more />
@@ -31,7 +36,7 @@
 
 <script setup>
 import SkuCardItem from './SkuCardItem.vue'
-import { skuCardList, btnLoading, createGoodSkuOption } from '~/utils/useSku'
+import { skuCardList, btnLoading, createGoodSkuOption, updateGoodSkuOption } from '~/utils/useSku'
 </script>
 
 <style>

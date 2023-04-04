@@ -1,5 +1,6 @@
 import { ref } from 'vue'
-import { createGoodSku } from '~/api/goods.js'
+// eslint-disable-next-line no-unused-vars
+import { createGoodSku, updateGoodSkuCard } from '~/api/goods.js'
 // 商品id
 export const goodsId = ref(0)
 // 商品sku list
@@ -16,6 +17,7 @@ export function initSkuCardList(list) {
         return item
     })
 }
+// 创建sku规格选项
 export const btnLoading = ref(false)
 export function createGoodSkuOption() {
     btnLoading.value = true
@@ -35,6 +37,25 @@ export function createGoodSkuOption() {
         })
         .finally(() => {
             btnLoading.value = false
+        })
+}
+// 修改sku规格选项
+export function updateGoodSkuOption(item) {
+    item.loading = true
+    updateGoodSkuCard(item.id, {
+        goods_id: item.goods_id,
+        name: item.text,
+        order: item.order,
+        type: 0
+    })
+        .then(res => {
+            item.name = res.text
+        })
+        .cache(() => {
+            item.text = item.name
+        })
+        .finally(() => {
+            item.loading = false
         })
 }
 // 初始化sku规格选项详情
