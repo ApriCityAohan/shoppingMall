@@ -5,6 +5,7 @@
             :key="index"
             shadow="never"
             class="mb-3 w-full"
+            :v-loading="item.loading"
         >
             <template #header>
                 <div class="flex items-center">
