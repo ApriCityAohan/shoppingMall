@@ -21,9 +21,18 @@
                     <el-button size="small">
                         <el-icon><Bottom /></el-icon>
                     </el-button>
-                    <el-button size="small">
-                        <el-icon><Delete /></el-icon>
-                    </el-button>
+                    <el-popconfirm
+                        title="是否要删除该商品?"
+                        confirm-button-text="确认"
+                        cancel-button-text="取消"
+                        @confirm="deleteGoodSkuOption(item)"
+                    >
+                        <template #reference>
+                            <el-button size="small">
+                                <el-icon><Delete /></el-icon>
+                            </el-button>
+                        </template>
+                    </el-popconfirm>
                 </div>
             </template>
             <SkuCardItem :sku-card-id="item.id" />
@@ -36,7 +45,13 @@
 
 <script setup>
 import SkuCardItem from './SkuCardItem.vue'
-import { skuCardList, btnLoading, createGoodSkuOption, updateGoodSkuOption } from '~/utils/useSku'
+import {
+    skuCardList,
+    btnLoading,
+    createGoodSkuOption,
+    updateGoodSkuOption,
+    deleteGoodSkuOption
+} from '~/utils/useSku'
 </script>
 
 <style>

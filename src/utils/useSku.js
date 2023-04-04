@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 // eslint-disable-next-line no-unused-vars
-import { createGoodSku, updateGoodSkuCard } from '~/api/goods.js'
+import { createGoodSku, updateGoodSkuCard, deleteGoodSkuCard } from '~/api/goods.js'
 // 商品id
 export const goodsId = ref(0)
 // 商品sku list
@@ -57,6 +57,14 @@ export function updateGoodSkuOption(item) {
         .finally(() => {
             item.loading = false
         })
+}
+// 删除sku规格选项
+export function deleteGoodSkuOption(item) {
+    item.loading = true
+    deleteGoodSkuCard(item.id).then(res => {
+        const i = skuCardList.value.findIndex(o => o.id === item.id)
+        if (i > -1) skuCardList.value.splice(i, 1)
+    })
 }
 // 初始化sku规格选项详情
 export function initSkuCardValue(id) {
