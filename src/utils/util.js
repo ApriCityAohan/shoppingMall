@@ -44,3 +44,17 @@ export function queryParse(query) {
     r = r ? '?' + r : ''
     return r
 }
+// 上移动
+export function isArrayMoveUp(arr, index) {
+    swapArray(arr, index, index - 1)
+    console.log(arr)
+}
+// 下移动
+export function isArrayMoveDown(arr, index) {
+    swapArray(arr, index, index + 1)
+}
+// 交换数组元素
+function swapArray(arr, index1, index2) {
+    arr[index1] = arr.splice(index2, 1, arr[index1])[0]
+    return arr
+}

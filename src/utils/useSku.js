@@ -67,6 +67,16 @@ export function deleteGoodSkuOption(item) {
         if (i > -1) skuCardList.value.splice(i, 1)
     })
 }
+// sku规格选项排序
+export function skuOptionMove(action, index) {
+    if (action === 'up') {
+        console.log('up', index)
+        isArrayMoveUp(skuCardList.value, index)
+    } else {
+        isArrayMoveDown(skuCardList.value, index)
+    }
+}
+
 // 初始化sku规格选项详情
 export function initSkuCardValue(id) {
     const item = skuCardList.value.find(o => o.id === id)
