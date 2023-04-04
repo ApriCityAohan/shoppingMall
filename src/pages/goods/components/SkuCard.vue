@@ -22,7 +22,7 @@
                         <el-icon><Bottom /></el-icon>
                     </el-button>
                     <el-popconfirm
-                        title="是否要删除该商品?"
+                        title="是否要删除该商品规格选项?"
                         confirm-button-text="确认"
                         cancel-button-text="取消"
                         @confirm="deleteGoodSkuOption(item)"
