@@ -1,6 +1,11 @@
 <template>
     <el-form-item label="添加规格">
-        <el-card v-for="item in skuCardList" :key="item.id" shadow="never" class="mb-3 w-full">
+        <el-card
+            v-for="(item, index) in skuCardList"
+            :key="index"
+            shadow="never"
+            class="mb-3 w-full"
+        >
             <template #header>
                 <div class="flex items-center">
                     <el-input
@@ -15,10 +20,19 @@
                             </el-icon>
                         </template>
                     </el-input>
-                    <el-button size="small" class="ml-auto">
+                    <el-button
+                        size="small"
+                        class="ml-auto"
+                        :disabled="index === 0"
+                        @click="skuOptionMove('up', index)"
+                    >
                         <el-icon><Top /></el-icon>
                     </el-button>
-                    <el-button size="small">
+                    <el-button
+                        size="small"
+                        :disabled="index === skuCardList.length - 1"
+                        @click="skuOptionMove('down', index)"
+                    >
                         <el-icon><Bottom /></el-icon>
                     </el-button>
                     <el-popconfirm
@@ -50,7 +64,8 @@ import {
     btnLoading,
     createGoodSkuOption,
     updateGoodSkuOption,
-    deleteGoodSkuOption
+    deleteGoodSkuOption,
+    skuOptionMove
 } from '~/utils/useSku'
 </script>
 
