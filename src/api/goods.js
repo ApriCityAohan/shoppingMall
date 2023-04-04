@@ -37,3 +37,7 @@ export function updateGoodSku(id, data) {
 export function createGoodSku(data) {
     return axios.post(`/admin/goods_skus_card`, data)
 }
+// 修改商品规格选项
+export function updateGoodSkuCard(id, data) {
+    return axios.post(`/admin/goods_skus_card/${id}`, data)
+}
