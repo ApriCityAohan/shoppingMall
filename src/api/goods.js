@@ -45,3 +45,7 @@ export function updateGoodSkuCard(id, data) {
 export function deleteGoodSkuCard(id) {
     return axios.post(`/admin/goods_skus_card/${id}/delete`)
 }
+// 排序商品规格选项
+export function sortGoodSkuCard(data) {
+    return axios.post(`/admin/goods_skus_card/sort`, data)
+}

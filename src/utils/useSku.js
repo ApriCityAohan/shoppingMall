@@ -1,6 +1,11 @@
 import { ref } from 'vue'
+import {
+    createGoodSku,
+    updateGoodSkuCard,
+    deleteGoodSkuCard,
+    sortGoodSkuCard
+} from '~/api/goods.js'
 // eslint-disable-next-line no-unused-vars
-import { createGoodSku, updateGoodSkuCard, deleteGoodSkuCard } from '~/api/goods.js'
 import { isArrayMoveUp, isArrayMoveDown } from '~/utils/util.js'
 // 商品id
 export const goodsId = ref(0)
@@ -69,12 +74,20 @@ export function deleteGoodSkuOption(item) {
 }
 // sku规格选项排序
 export function skuOptionMove(action, index) {
-    if (action === 'up') {
-        console.log('up', index)
-        isArrayMoveUp(skuCardList.value, index)
-    } else {
-        isArrayMoveDown(skuCardList.value, index)
-    }
+    const oList = JSON.parse(JSON.stringify(skuCardList.value))
+    const fun = action === 'up' ? isArrayMoveUp : isArrayMoveDown
+    fun(oList, index)
+    const sortData = oList.map((item, i) => {
+        return {
+            id: item.id,
+            order: i
+        }
+    })
+    sortGoodSkuCard({ sortdata: sortData })
+        .then(res => {
+            fun(skuCardList.value, index)
+        })
+        .finally(() => {})
 }
 
 // 初始化sku规格选项详情
