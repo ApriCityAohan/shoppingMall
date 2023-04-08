@@ -3,7 +3,8 @@ import {
     createGoodSku,
     updateGoodSkuCard,
     deleteGoodSkuCard,
-    sortGoodSkuCard
+    sortGoodSkuCard,
+    createGoodSkuValue
 } from '~/api/goods.js'
 // eslint-disable-next-line no-unused-vars
 import { isArrayMoveUp, isArrayMoveDown } from '~/utils/util.js'
@@ -109,13 +110,30 @@ export function initSkuCardValue(id) {
             InputRef.value.input.focus()
         })
     }
-
+    const loading = ref(false)
     const handleInputConfirm = () => {
-        if (inputValue.value) {
-            dynamicTags.value.push(inputValue.value)
+        if (!inputValue.value) {
+            inputVisible.value = false
+            return
         }
-        inputVisible.value = false
-        inputValue.value = ''
+        loading.value = true
+        createGoodSkuValue({
+            goods_skus_card_id: id, // 规格ID
+            name: item.name, // 规格名称
+            order: 50, // 排序
+            value: inputValue.value // 规格选项名称
+        })
+            .then(res => {
+                item.goodsSkusCardValue.push({
+                    ...res,
+                    text: res.value
+                })
+            })
+            .finally(() => {
+                inputVisible.value = false
+                inputValue.value = ''
+                loading.value = false
+            })
     }
 
     return {
@@ -125,6 +143,7 @@ export function initSkuCardValue(id) {
         InputRef,
         handleClose,
         showInput,
-        handleInputConfirm
+        handleInputConfirm,
+        loading
     }
 }
