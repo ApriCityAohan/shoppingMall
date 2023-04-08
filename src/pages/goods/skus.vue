@@ -69,7 +69,7 @@ const open = row => {
         .then(res => {
             // console.log(res)
             form.sku_type = res.sku_type
-            console.log(form.sku_type)
+            // console.log(form.sku_type)
             form.sku_value = res.sku_value || {
                 oprice: 0,
                 pprice: 0,
