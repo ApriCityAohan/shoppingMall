@@ -4,7 +4,8 @@ import {
     updateGoodSkuCard,
     deleteGoodSkuCard,
     sortGoodSkuCard,
-    createGoodSkuValue
+    createGoodSkuValue,
+    updateGoodSkuCardValue
 } from '~/api/goods.js'
 // eslint-disable-next-line no-unused-vars
 import { isArrayMoveUp, isArrayMoveDown } from '~/utils/util.js'
@@ -135,7 +136,25 @@ export function initSkuCardValue(id) {
                 loading.value = false
             })
     }
-
+    const handleChange = (item, sku) => {
+        console.log(sku)
+        loading.value = true
+        updateGoodSkuCardValue(sku.id, {
+            goods_skus_card_id: id, // 规格ID
+            name: sku.name, // 规格名称
+            order: sku.order, // 排序
+            value: item // 规格选项
+        })
+            .then(res => {
+                sku.value = item
+            })
+            .catch(() => {
+                sku.text = sku.value
+            })
+            .finally(() => {
+                loading.value = false
+            })
+    }
     return {
         item,
         inputValue,
@@ -144,6 +163,7 @@ export function initSkuCardValue(id) {
         handleClose,
         showInput,
         handleInputConfirm,
+        handleChange,
         loading
     }
 }
