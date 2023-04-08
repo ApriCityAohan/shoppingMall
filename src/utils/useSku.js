@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import {
     createGoodSku,
     updateGoodSkuCard,
@@ -93,5 +93,38 @@ export function skuOptionMove(action, index) {
 // 初始化sku规格选项详情
 export function initSkuCardValue(id) {
     const item = skuCardList.value.find(o => o.id === id)
-    return { item }
+
+    const inputValue = ref('')
+    const dynamicTags = ref(['Tag 1', 'Tag 2', 'Tag 3'])
+    const inputVisible = ref(false)
+    const InputRef = ref()
+
+    const handleClose = tag => {
+        dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1)
+    }
+
+    const showInput = () => {
+        inputVisible.value = true
+        nextTick(() => {
+            InputRef.value.input.focus()
+        })
+    }
+
+    const handleInputConfirm = () => {
+        if (inputValue.value) {
+            dynamicTags.value.push(inputValue.value)
+        }
+        inputVisible.value = false
+        inputValue.value = ''
+    }
+
+    return {
+        item,
+        inputValue,
+        inputVisible,
+        InputRef,
+        handleClose,
+        showInput,
+        handleInputConfirm
+    }
 }
