@@ -49,3 +49,7 @@ export function deleteGoodSkuCard(id) {
 export function sortGoodSkuCard(data) {
     return axios.post(`/admin/goods_skus_card/sort`, data)
 }
+// 创建多规格商品规格值
+export function createGoodSkuValue(data) {
+    return axios.post(`/admin/goods_skus_card_value`, data)
+}
