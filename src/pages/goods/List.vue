@@ -109,13 +109,20 @@
                 >
                     <template #default="{ row }">
                         <div v-if="row.ischeck === 0" class="flex flex-col">
-                            <el-button type="success" plain size="small">审核通过</el-button>
+                            <el-button
+                                type="success"
+                                plain
+                                size="small"
+                                @click="handleAuditGoods(row.id, 1)"
+                                >审核通过</el-button
+                            >
                             <el-button
                                 type="danger"
                                 plain
                                 size="small"
                                 class="mt-2"
                                 style="margin-left: 0px !important"
+                                @click="handleAuditGoods(row.id, 2)"
                             >
                                 审核拒绝
                             </el-button>
@@ -273,7 +280,8 @@ import {
     updateGoodsStatus,
     createGoods,
     updateGoods,
-    deleteGoods
+    deleteGoods,
+    auditGoods
 } from '~/api/goods.js'
 import { getCategoryList } from '~/api/category'
 import Drawer from '~/components/Drawer.vue'
@@ -299,7 +307,8 @@ const {
     multipleTableRef,
     handleSelectionChange,
     handleMultiDelete,
-    handleMultiStatusChange
+    handleMultiStatusChange,
+    handleAuditGoods
 } = initTableData({
     getListFun: getGoodsList,
     searchForm: {
@@ -317,7 +326,8 @@ const {
         total.value = res.totalCount
     },
     delete: deleteGoods,
-    updateStatus: updateGoodsStatus
+    updateStatus: updateGoodsStatus,
+    audit: auditGoods
 })
 const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, handleSubmit } =
     initForm({

@@ -75,6 +75,19 @@ export function initTableData(opt = {}) {
     const handleSelectionChange = e => {
         multiSelectionIds.value = e.map(o => o.id)
     }
+    // 审核商品
+    const handleAuditGoods = (id, status) => {
+        // console.log(id, status)
+        loading.value = true
+        opt.audit(id, status)
+            .then(res => {
+                toast('审核完毕')
+                getData(currentPage.value)
+            })
+            .finally(() => {
+                loading.value = false
+            })
+    }
     // 多选删除
     const handleMultiDelete = () => {
         loading.value = true
@@ -116,6 +129,7 @@ export function initTableData(opt = {}) {
         handleDelete,
         handleStatusChange,
         multipleTableRef,
+        handleAuditGoods,
         handleSelectionChange,
         handleMultiDelete,
         handleMultiStatusChange
