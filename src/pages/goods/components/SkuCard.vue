@@ -76,7 +76,6 @@ import {
 const ChooseSkuRef = ref(null)
 const handleChooseSku = item => {
     ChooseSkuRef.value.open()
-    console.log(item)
 }
 </script>
 
