@@ -70,12 +70,14 @@ const open = (callback = false) => {
 const list = ref([])
 // 单选表单
 const form = reactive({
+    name: '',
     list: []
 })
 // 点击规格列表
 function handleClickSkuList(id) {
     skuId.value = id
     const item = tableData.value.find(item => item.id === id)
+    form.name = item.name
     list.value = item.default.split(',')
 }
 // 提交
