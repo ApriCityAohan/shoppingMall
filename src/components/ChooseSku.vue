@@ -59,8 +59,10 @@ const { tableData, currentPage, limit, total, getData } = initTableData({
 })
 // 当前选中的规格id
 const skuId = ref(0)
+const callbackFun = ref(null)
 // 打开弹窗
-const open = () => {
+const open = (callback = false) => {
+    callbackFun.value = callback
     getData(1)
     dialogVisible.value = true
 }
@@ -78,6 +80,9 @@ function handleClickSkuList(id) {
 }
 // 提交
 const onSubmit = () => {
+    if (callbackFun.value) {
+        callbackFun.value(form)
+    }
     dialogVisible.value = false
 }
 defineExpose({
