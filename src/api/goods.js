@@ -16,6 +16,10 @@ export function createGoods(data) {
 export function updateGoods(id, data) {
     return axios.post(`/admin/goods/${id}`, data)
 }
+// 审核商品
+export function auditGoods(id, ischeck) {
+    return axios.post(`/admin/goods/${id}/check`, { ischeck })
+}
 
 export function deleteGoods(ids) {
     ids = Array.isArray(ids) ? ids : [ids]
