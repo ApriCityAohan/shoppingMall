@@ -16,9 +16,11 @@
                         @change="updateGoodSkuOption(item)"
                     >
                         <template #append>
-                            <el-icon>
-                                <more />
-                            </el-icon>
+                            <el-button text size="small" @click="handleChooseSku(item)">
+                                <el-icon>
+                                    <more />
+                                </el-icon>
+                            </el-button>
                         </template>
                     </el-input>
                     <el-button
@@ -56,10 +58,13 @@
             添加规格
         </el-button>
     </el-form-item>
+    <ChooseSku ref="ChooseSkuRef" />
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import SkuCardItem from './SkuCardItem.vue'
+import ChooseSku from '~/components/ChooseSku.vue'
 import {
     skuCardList,
     btnLoading,
@@ -68,6 +73,11 @@ import {
     deleteGoodSkuOption,
     skuOptionMove
 } from '~/utils/useSku'
+const ChooseSkuRef = ref(null)
+const handleChooseSku = item => {
+    ChooseSkuRef.value.open()
+    console.log(item)
+}
 </script>
 
 <style>
