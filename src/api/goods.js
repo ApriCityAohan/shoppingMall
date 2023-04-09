@@ -61,3 +61,7 @@ export function updateGoodSkuCardValue(id, data) {
 export function deleteGoodSkuCardValue(id) {
     return axios.post(`/admin/goods_skus_card_value/${id}/delete`)
 }
+// 选择设置商品规格选项和值
+export function chooseGoodSkuCardValue(id, data) {
+    return axios.post(`/admin/goods_skus_card/${id}/set`, data)
+}
