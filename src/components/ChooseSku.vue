@@ -47,7 +47,16 @@ import { ref, reactive } from 'vue'
 import { getSkuList } from '~/api/skus'
 import { initTableData } from '~/utils/useCommon'
 const dialogVisible = ref(false)
-const { tableData, currentPage, limit, total, getData } = initTableData({ getListFun: getSkuList })
+const { tableData, currentPage, limit, total, getData } = initTableData({
+    getListFun: getSkuList,
+    onGetListSuccess: res => {
+        tableData.value = res.list
+        total.value = res.totalCount
+        if (tableData.value.length > 0) {
+            handleClickSkuList(tableData.value[0].id)
+        }
+    }
+})
 // 当前选中的规格id
 const skuId = ref(0)
 // 打开弹窗
@@ -61,7 +70,7 @@ const form = reactive({
     list: []
 })
 // 点击规格列表
-const handleClickSkuList = id => {
+function handleClickSkuList(id) {
     skuId.value = id
     const item = tableData.value.find(item => item.id === id)
     list.value = item.default.split(',')
