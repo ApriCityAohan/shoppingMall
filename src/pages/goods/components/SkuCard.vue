@@ -71,11 +71,17 @@ import {
     createGoodSkuOption,
     updateGoodSkuOption,
     deleteGoodSkuOption,
-    skuOptionMove
+    skuOptionMove,
+    handleChooseSetSkuValue
 } from '~/utils/useSku'
 const ChooseSkuRef = ref(null)
 const handleChooseSku = item => {
-    ChooseSkuRef.value.open()
+    ChooseSkuRef.value.open(form => {
+        handleChooseSetSkuValue(item.id, {
+            name: form.name,
+            value: form.list
+        })
+    })
 }
 </script>
 

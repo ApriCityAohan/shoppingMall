@@ -6,7 +6,8 @@ import {
     sortGoodSkuCard,
     createGoodSkuValue,
     updateGoodSkuCardValue,
-    deleteGoodSkuCardValue
+    deleteGoodSkuCardValue,
+    chooseGoodSkuCardValue
 } from '~/api/goods.js'
 // eslint-disable-next-line no-unused-vars
 import { isArrayMoveUp, isArrayMoveDown } from '~/utils/util.js'
@@ -91,6 +92,24 @@ export function skuOptionMove(action, index) {
             fun(skuCardList.value, index)
         })
         .finally(() => {})
+}
+
+// 选择设置商品规格选项和值
+export function handleChooseSetSkuValue(id, data) {
+    const item = skuCardList.value.find(o => o.id === id)
+    item.loading = true
+    chooseGoodSkuCardValue(id, data)
+        .then(res => {
+            item.name = item.text = res.goods_skus_card.name
+            console.log(res)
+            item.goodsSkusCardValue = res.goods_skus_card_value.map(v => {
+                v.text = v.value
+                return v
+            })
+        })
+        .finally(() => {
+            item.loading = false
+        })
 }
 
 // 初始化sku规格选项详情
