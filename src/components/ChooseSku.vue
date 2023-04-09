@@ -66,6 +66,7 @@ const open = () => {
 }
 // sku列表
 const list = ref([])
+// 单选表单
 const form = reactive({
     list: []
 })
