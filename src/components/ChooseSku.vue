@@ -1,8 +1,18 @@
 <template>
     <el-dialog v-model="dialogVisible" title="规格选择" width="80%">
-        <el-container style="height: 65vh">
+        <el-container style="height: 65vh" class="rounded border">
             <el-aside width="220px" class="sku-aside">
-                <div class="top">{{ tableData }}</div>
+                <div class="top">
+                    <div
+                        v-for="(item, index) in tableData"
+                        :key="index"
+                        class="sku-list"
+                        :class="{ active: skuId === item.id }"
+                        @click="handleClickSkuList(item.id)"
+                    >
+                        {{ item.name }}
+                    </div>
+                </div>
                 <div class="bottom">
                     <el-pagination
                         v-model:current-page="currentPage"
@@ -15,7 +25,11 @@
                 </div>
             </el-aside>
             <el-main>
-                <!-- Main content -->
+                <el-checkbox-group v-model="form.list">
+                    <el-checkbox v-for="item in list" :key="item" :label="item" border>
+                        {{ item }}
+                    </el-checkbox>
+                </el-checkbox-group>
             </el-main>
         </el-container>
 
@@ -29,15 +43,30 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { getSkuList } from '~/api/skus'
 import { initTableData } from '~/utils/useCommon'
 const dialogVisible = ref(false)
 const { tableData, currentPage, limit, total, getData } = initTableData({ getListFun: getSkuList })
+// 当前选中的规格id
+const skuId = ref(0)
+// 打开弹窗
 const open = () => {
     getData(1)
     dialogVisible.value = true
 }
+// sku列表
+const list = ref([])
+const form = reactive({
+    list: []
+})
+// 点击规格列表
+const handleClickSkuList = id => {
+    skuId.value = id
+    const item = tableData.value.find(item => item.id === id)
+    list.value = item.default.split(',')
+}
+// 提交
 const onSubmit = () => {
     dialogVisible.value = false
 }
@@ -66,5 +95,13 @@ defineExpose({
     right: 0;
     height: 40px;
     @apply flex justify-center items-center;
+}
+.sku-list {
+    border-bottom: 1px solid #f4f4f4;
+    @apply p-3 text-sm text-gray-600 cursor-pointer flex items-center;
+}
+.sku-list:hover,
+.active {
+    @apply bg-blue-50;
 }
 </style>
