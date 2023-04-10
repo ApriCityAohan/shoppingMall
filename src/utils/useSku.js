@@ -1,4 +1,4 @@
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, computed } from 'vue'
 import {
     createGoodSku,
     updateGoodSkuCard,
@@ -15,6 +15,7 @@ import { isArrayMoveUp, isArrayMoveDown } from '~/utils/util.js'
 export const goodsId = ref(0)
 // 商品sku list
 export const skuCardList = ref([])
+export const skuList = ref([])
 // 初始化sku list
 export function initSkuCardList(list) {
     skuCardList.value = list.goodsSkusCard.map(item => {
@@ -26,6 +27,7 @@ export function initSkuCardList(list) {
         })
         return item
     })
+    skuList.value = list.goodsSkus
 }
 // 创建sku规格选项
 export const btnLoading = ref(false)
@@ -191,5 +193,63 @@ export function initSkuCardValue(id) {
         handleInputConfirm,
         handleChange,
         loading
+    }
+}
+
+// 初始化sku规格表格
+export function initSkuTable() {
+    const skuLabels = computed(() => {
+        return skuCardList.value.filter(i => i.goodsSkusCardValue.length > 0)
+    })
+    const skuTableThs = computed(() => {
+        const length = skuLabels.value.length
+        return [
+            {
+                name: '商品规格',
+                colSpan: length,
+                rowSpan: length > 0 ? 1 : 2,
+                width: '100'
+            },
+            {
+                name: '销售价',
+                width: '100',
+                rowSpan: 2
+            },
+            {
+                name: '市场价',
+                width: '100',
+                rowSpan: 2
+            },
+            {
+                name: '成本价',
+                width: '100',
+                rowSpan: 2
+            },
+            {
+                name: '库存',
+                width: '100',
+                rowSpan: 2
+            },
+            {
+                name: '体积',
+                width: '100',
+                rowSpan: 2
+            },
+            {
+                name: '重量',
+                width: '100',
+                rowSpan: 2
+            },
+            {
+                name: '编码',
+                width: '100',
+                rowSpan: 2
+            }
+        ]
+    })
+    return {
+        skuLabels,
+        skuTableThs,
+        skuList
     }
 }
