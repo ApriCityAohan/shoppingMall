@@ -10,7 +10,7 @@ import {
     chooseGoodSkuCardValue
 } from '~/api/goods.js'
 // eslint-disable-next-line no-unused-vars
-import { isArrayMoveUp, isArrayMoveDown } from '~/utils/util.js'
+import { isArrayMoveUp, isArrayMoveDown, cartesianProductOf } from '~/utils/util.js'
 // 商品id
 export const goodsId = ref(0)
 // 商品sku list
@@ -28,6 +28,7 @@ export function initSkuCardList(list) {
         return item
     })
     skuList.value = list.goodsSkus
+    console.log(skuList.value)
 }
 // 创建sku规格选项
 export const btnLoading = ref(false)
@@ -46,6 +47,7 @@ export function createGoodSkuOption() {
                 loading: false,
                 goodsSkusCardValue: []
             })
+            getTableData()
         })
         .finally(() => {
             btnLoading.value = false
@@ -62,6 +64,7 @@ export function updateGoodSkuOption(item) {
     })
         .then(res => {
             item.name = res.text
+            getTableData()
         })
         .catch(() => {
             item.text = item.name
@@ -76,6 +79,7 @@ export function deleteGoodSkuOption(item) {
     deleteGoodSkuCard(item.id).then(res => {
         const i = skuCardList.value.findIndex(o => o.id === item.id)
         if (i > -1) skuCardList.value.splice(i, 1)
+        getTableData()
     })
 }
 // sku规格选项排序
@@ -92,6 +96,7 @@ export function skuOptionMove(action, index) {
     sortGoodSkuCard({ sortdata: sortData })
         .then(res => {
             fun(skuCardList.value, index)
+            getTableData()
         })
         .finally(() => {})
 }
@@ -108,6 +113,7 @@ export function handleChooseSetSkuValue(id, data) {
                 v.text = v.value
                 return v
             })
+            getTableData()
         })
         .finally(() => {
             item.loading = false
@@ -128,6 +134,7 @@ export function initSkuCardValue(id) {
             .then(res => {
                 const i = item.goodsSkusCardValue.findIndex(o => o.id === tag.id)
                 if (i > -1) item.goodsSkusCardValue.splice(i, 1)
+                getTableData()
             })
             .finally(() => {
                 loading.value = false
@@ -157,6 +164,7 @@ export function initSkuCardValue(id) {
                     ...res,
                     text: res.value
                 })
+                getTableData()
             })
             .finally(() => {
                 inputVisible.value = false
@@ -175,6 +183,7 @@ export function initSkuCardValue(id) {
         })
             .then(res => {
                 sku.value = item
+                getTableData()
             })
             .catch(() => {
                 sku.text = sku.value
@@ -252,4 +261,32 @@ export function initSkuTable() {
         skuTableThs,
         skuList
     }
+}
+function getTableData() {
+    setTimeout(() => {
+        if (skuCardList.value.length === 0) return []
+        const list = []
+        skuCardList.value.forEach(item => {
+            if (item.goodsSkusCardValue.length > 0) {
+                list.push(item.goodsSkusCardValue)
+            }
+        })
+        if (list.length === 0) return []
+        const data = cartesianProductOf(...list)
+        skuList.value = []
+        skuList.value = data.map(o => {
+            return {
+                code: '',
+                cprice: '0.00',
+                goods_id: goodsId.value,
+                image: '',
+                oprice: '0.00',
+                pprice: '0.00',
+                skus: o,
+                stock: 0,
+                volume: 0,
+                weight: 0
+            }
+        })
+    }, 200)
 }
