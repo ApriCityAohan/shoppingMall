@@ -145,7 +145,12 @@
                             </el-button>
                             <el-button
                                 text
-                                type="primary"
+                                :type="
+                                    (scope.row.sku_type === 0 && !scope.row.sku_value) ||
+                                    (scope.row.sku_type === 1 && !scope.row.goods_skus.length)
+                                        ? 'danger'
+                                        : 'primary'
+                                "
                                 size="small"
                                 class="px-1"
                                 :loading="scope.row.skuLoading"

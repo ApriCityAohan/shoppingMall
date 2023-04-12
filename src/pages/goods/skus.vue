@@ -49,7 +49,7 @@ import SkuCard from '~/pages/goods/components/skuCard.vue'
 import SkuTable from '~/pages/goods/components/skuTable.vue'
 import { readGoods, updateGoodSku } from '~/api/goods'
 import { toast } from '~/utils/util'
-import { goodsId, initSkuCardList } from '~/utils/useSku'
+import { goodsId, initSkuCardList, skuList } from '~/utils/useSku'
 // 抽屉Ref
 const drawerRef = ref(null)
 // 表单数据
@@ -91,7 +91,14 @@ const emit = defineEmits(['refers'])
 // 提交表单
 const onSubmit = () => {
     drawerRef.value.loadOn()
-    updateGoodSku(goodsId.value, form)
+    const data = {
+        sku_type: form.sku_type,
+        sku_value: form.sku_value
+    }
+    if (form.sku_type === 1) {
+        data.goodsSkus = skuList.value
+    }
+    updateGoodSku(goodsId.value, data)
         .then(() => {
             drawerRef.value.close()
             toast('设置商品规格成功')
