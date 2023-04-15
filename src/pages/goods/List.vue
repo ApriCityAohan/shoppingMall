@@ -38,12 +38,34 @@
                     </template>
                 </Search>
             </div>
-            <ListHeader
-                layout="create,refresh,delete"
-                @create="handleAdd"
-                @refresh="getData"
-                @delete="handleMultiDelete"
-            >
+            <ListHeader layout="create,refresh" @create="handleAdd" @refresh="getData">
+                <el-button
+                    v-if="searchForm.tab !== 'delete'"
+                    type="danger"
+                    size="small"
+                    @click="handleMultiDelete"
+                    >批量删除</el-button
+                >
+                <el-button
+                    v-if="searchForm.tab === 'delete'"
+                    type="warning"
+                    size="small"
+                    @click="handleMultiRestore"
+                    >恢复商品</el-button
+                >
+
+                <el-popconfirm
+                    title="是否要彻底删除该商品?"
+                    confirm-button-text="确认"
+                    cancel-button-text="取消"
+                    @confirm="handleMultiDestroy"
+                >
+                    <template #reference>
+                        <el-button v-if="searchForm.tab === 'delete'" type="danger" size="small"
+                            >彻底删除</el-button
+                        >
+                    </template>
+                </el-popconfirm>
                 <el-button
                     v-if="searchForm.tab == 'all' || searchForm.tab == 'off'"
                     size="small"
@@ -286,9 +308,12 @@ import {
     createGoods,
     updateGoods,
     deleteGoods,
-    auditGoods
+    auditGoods,
+    restoreGoods,
+    destroyGoods
 } from '~/api/goods.js'
 import { getCategoryList } from '~/api/category'
+import { toast } from '~/utils/util.js'
 import Drawer from '~/components/Drawer.vue'
 import ChooseImage from '~/components/ChooseImage.vue'
 import ListHeader from '~/components/ListHeader.vue'
@@ -313,7 +338,8 @@ const {
     handleSelectionChange,
     handleMultiDelete,
     handleMultiStatusChange,
-    handleAuditGoods
+    handleAuditGoods,
+    multiSelectionIds
 } = initTableData({
     getListFun: getGoodsList,
     searchForm: {
@@ -402,6 +428,34 @@ const skusRef = ref(null)
 // 打开content
 const handleOpenSku = row => {
     skusRef.value.open(row)
+}
+const handleMultiRestore = () => {
+    loading.value = true
+    restoreGoods(multiSelectionIds.value)
+        .then(() => {
+            toast('恢复成功')
+            if (multipleTableRef.value) {
+                multipleTableRef.value.clearSelection()
+            }
+            getData()
+        })
+        .finally(() => {
+            loading.value = false
+        })
+}
+const handleMultiDestroy = () => {
+    loading.value = true
+    destroyGoods(multiSelectionIds.value)
+        .then(() => {
+            toast('删除成功')
+            if (multipleTableRef.value) {
+                multipleTableRef.value.clearSelection()
+            }
+            getData()
+        })
+        .finally(() => {
+            loading.value = false
+        })
 }
 </script>
 

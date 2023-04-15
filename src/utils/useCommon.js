@@ -132,7 +132,8 @@ export function initTableData(opt = {}) {
         handleAuditGoods,
         handleSelectionChange,
         handleMultiDelete,
-        handleMultiStatusChange
+        handleMultiStatusChange,
+        multiSelectionIds
     }
 }
 // 新增、编辑

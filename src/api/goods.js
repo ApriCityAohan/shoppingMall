@@ -25,6 +25,16 @@ export function deleteGoods(ids) {
     ids = Array.isArray(ids) ? ids : [ids]
     return axios.post(`/admin/goods/delete_all`, { ids })
 }
+// 恢复商品
+export function restoreGoods(ids) {
+    ids = Array.isArray(ids) ? ids : [ids]
+    return axios.post(`/admin/goods/restore`, { ids })
+}
+// 恢复商品
+export function destroyGoods(ids) {
+    ids = Array.isArray(ids) ? ids : [ids]
+    return axios.post(`/admin/goods/destroy`, { ids })
+}
 // 获取商品详情
 export function readGoods(id) {
     return axios.get(`/admin/goods/read/${id}`)
