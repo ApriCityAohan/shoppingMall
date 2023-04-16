@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-model="dialogVisible" title="商品选择" width="80%" destroy-on-close>
+    <el-dialog v-model="dialogVisible" title="商品选择" width="80%" destroy-on-close @close="reset">
         <div class="border rounded pb-5">
             <div class="flex items-center p-4">
                 <el-input
