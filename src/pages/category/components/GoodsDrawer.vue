@@ -38,7 +38,7 @@
 import { ref } from 'vue'
 import Drawer from '~/components/Drawer.vue'
 import ChooseGoods from '~/components/ChooseGoods.vue'
-import { getCategoryGoods, deleteCategoryGoods } from '~/api/category'
+import { getCategoryGoods, deleteCategoryGoods, relationCategoryGoods } from '~/api/category'
 import { toast } from '~/utils/util'
 const drawerRef = ref(null)
 const tableLoading = ref(false)
@@ -77,7 +77,20 @@ const handleDelete = id => {
 
 const chooseGoodsRef = ref(null)
 const handleCommit = () => {
-    chooseGoodsRef.value.open()
+    chooseGoodsRef.value.open(ids => {
+        drawerRef.value.loadOn()
+        relationCategoryGoods({
+            category_id: categoryID.value,
+            goods_ids: ids
+        })
+            .then(() => {
+                toast('关联成功')
+                getData(categoryID.value)
+            })
+            .finally(() => {
+                drawerRef.value.loadOff()
+            })
+    })
 }
 
 defineExpose({
