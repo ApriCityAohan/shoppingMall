@@ -13,7 +13,7 @@
                 <div class="custom-tree-node">
                     <span class="ml-2">{{ data.name }}</span>
                     <div class="ml-auto">
-                        <el-button text type="primary" size="small" @click="addChild(data.id)"
+                        <el-button text type="primary" size="small" @click="openGoodsDrawer(data)"
                             >推荐商品</el-button
                         >
                         <el-switch
@@ -47,13 +47,15 @@
                 </el-form-item>
             </el-form>
         </Drawer>
+        <GoodsDrawer ref="goodsDrawerRef" />
     </el-card>
 </template>
 
 <script setup>
-// import { ref } from 'vue'
+import { ref } from 'vue'
 import ListHeader from '~/components/ListHeader.vue'
 import Drawer from '~/components/Drawer.vue'
+import GoodsDrawer from './components/GoodsDrawer.vue'
 // eslint-disable-next-line no-unused-vars
 import {
     getCategoryList,
@@ -81,11 +83,9 @@ const { drawerRef, formRef, form, drawerTitle, handleAdd, handleEdit, handleSubm
     update: createCategory,
     loading
 })
-// 添加子节点
-const addChild = id => {
-    handleAdd()
-    form.rule_id = id
-    form.status = 1
+const goodsDrawerRef = ref(null)
+const openGoodsDrawer = item => {
+    goodsDrawerRef.value.open(item)
 }
 </script>
 
