@@ -13,7 +13,12 @@
                 <div class="custom-tree-node">
                     <span class="ml-2">{{ data.name }}</span>
                     <div class="ml-auto">
-                        <el-button text type="primary" size="small" @click="openGoodsDrawer(data)"
+                        <el-button
+                            text
+                            type="primary"
+                            size="small"
+                            :loading="data.goodsDrawerLoading"
+                            @click="openGoodsDrawer(data)"
                             >推荐商品</el-button
                         >
                         <el-switch
@@ -69,7 +74,10 @@ import { initTableData, initForm } from '~/utils/useCommon'
 const { loading, tableData, getData, handleDelete, handleStatusChange } = initTableData({
     getListFun: getCategoryList,
     onGetListSuccess: res => {
-        tableData.value = res
+        tableData.value = res.map(i => {
+            i.goodsDrawerLoading = false
+            return i
+        })
     },
     delete: deleteCategory,
     updateStatus: updateCategoryStatus
