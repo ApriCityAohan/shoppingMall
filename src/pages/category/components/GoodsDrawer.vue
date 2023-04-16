@@ -30,11 +30,14 @@
             </el-table-column>
         </el-table>
     </Drawer>
+
+    <ChooseGoods ref="chooseGoodsRef" />
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import Drawer from '~/components/Drawer.vue'
+import ChooseGoods from '~/components/ChooseGoods.vue'
 import { getCategoryGoods, deleteCategoryGoods } from '~/api/category'
 import { toast } from '~/utils/util'
 const drawerRef = ref(null)
@@ -71,6 +74,12 @@ const handleDelete = id => {
             tableLoading.value = false
         })
 }
+
+const chooseGoodsRef = ref(null)
+const handleCommit = () => {
+    chooseGoodsRef.value.open()
+}
+
 defineExpose({
     open
 })
