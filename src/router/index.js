@@ -95,6 +95,12 @@ const routeVlaue = [
         name: '/skus/list',
         component: () => import('~/pages/skus/List.vue'),
         meta: { title: '规格管理' }
+    },
+    {
+        path: '/level/list',
+        name: '/level/list',
+        component: () => import('~/pages/level/List.vue'),
+        meta: { title: '会员等级' }
     }
 ]
 export const router = createRouter({
