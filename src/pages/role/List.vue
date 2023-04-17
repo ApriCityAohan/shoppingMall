@@ -25,7 +25,7 @@
                         修改
                     </el-button>
                     <el-popconfirm
-                        title="是否要删除公告?"
+                        title="是否要删除该用户?"
                         confirm-button-text="确认"
                         cancel-button-text="取消"
                         @confirm="handleDelete(scope.row.id)"
