@@ -62,7 +62,44 @@
                     <el-switch v-model="form.status" :active-value="1" :inactive-value="0">
                     </el-switch>
                 </el-form-item>
-                <el-form-item label=""> </el-form-item>
+                <el-form-item label="升级条件">
+                    <div class="mb-2">
+                        <small class="text-xs mr-2">累计消费满</small>
+                        <el-input
+                            v-model="form.max_price"
+                            size="small"
+                            type="number"
+                            style="width: 50%"
+                        >
+                            <template #append> 元 </template>
+                        </el-input>
+                        <small class="text-xs flex text-gray-400">
+                            设置会员等级所需要的累计消费必须大于等于0,单位：元
+                        </small>
+                    </div>
+                    <div>
+                        <small class="text-xs mr-2">累计次数满</small>
+                        <el-input
+                            v-model="form.max_times"
+                            size="small"
+                            type="number"
+                            style="width: 50%"
+                        >
+                            <template #append> 次 </template>
+                        </el-input>
+                        <small class="text-xs flex text-gray-400">
+                            设置会员等级所需要的购买量必须大于等于0,单位：笔
+                        </small>
+                    </div>
+                </el-form-item>
+                <el-form-item label="折扣率(%)">
+                    <el-input v-model="form.discount" size="small" style="width: 50%">
+                        <template #append> % </template>
+                    </el-input>
+                    <small class="text-gray-400 flex leading-tight">
+                        折扣率单位为百分比，如输入90，表示该会员等级的用户可以以商品原价的90%购买
+                    </small>
+                </el-form-item>
             </el-form>
         </Drawer>
     </el-card>
@@ -97,7 +134,10 @@ const { drawerRef, formRef, form, rules, drawerTitle, handleAdd, handleEdit, han
         getData,
         form: {
             name: '',
-            desc: '',
+            level: 0,
+            discount: 0,
+            max_price: 0,
+            max_times: 0,
             status: 1
         },
         rules: {
