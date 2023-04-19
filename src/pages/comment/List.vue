@@ -21,11 +21,18 @@
                             fit="fill"
                             class="mr-3"
                         ></el-avatar>
-                        <div class="flex-1">
+                        <div class="flex-1 px-1">
                             <h6 class="flex items-center">
                                 {{ row.user.username }}
                                 <small class="ml-2 text-gray-400">{{ row.review_time }}</small>
-                                <el-button size="small" class="ml-auto mr-1">回复</el-button>
+                                <el-button
+                                    v-if="!row.textareaEdit && !row.extra"
+                                    size="small"
+                                    class="ml-auto"
+                                    @click="openTextarea(row)"
+                                >
+                                    回复
+                                </el-button>
                             </h6>
                             {{ row.review.data }}
                             <div class="py-2">
@@ -39,19 +46,42 @@
                                     class="rounded"
                                 ></el-image>
                             </div>
-                            <div
-                                v-for="(item, index) in row.extra"
-                                :key="index"
-                                class="bg-gray-100 p-3 rounded"
-                            >
-                                <h6 class="flex text-md font-bold">
-                                    客服
-                                    <el-button type="info" size="small" class="ml-auto">
-                                        修改
+                            <div v-if="row.textareaEdit">
+                                <el-input
+                                    v-model="textarea"
+                                    placeholder="请输入评价内容"
+                                    type="textarea"
+                                    :rows="2"
+                                ></el-input>
+                                <div class="py-2">
+                                    <el-button type="primary" size="small" @click="review(row)">
+                                        确定
                                     </el-button>
-                                </h6>
-                                <p>{{ item.data }}</p>
+                                    <el-button size="small" @click="row.textareaEdit = false">
+                                        取消
+                                    </el-button>
+                                </div>
                             </div>
+                            <template v-else>
+                                <div
+                                    v-for="(item, index) in row.extra"
+                                    :key="index"
+                                    class="bg-gray-100 p-3 rounded"
+                                >
+                                    <h6 class="flex text-md font-bold">
+                                        客服
+                                        <el-button
+                                            type="info"
+                                            size="small"
+                                            class="ml-auto"
+                                            @click="openTextarea(row, item.data)"
+                                        >
+                                            修改
+                                        </el-button>
+                                    </h6>
+                                    <p>{{ item.data }}</p>
+                                </div>
+                            </template>
                         </div>
                     </div>
                 </template>
@@ -110,12 +140,14 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import {
     getGoodsCommentList,
     updateGoodsCommentStatus,
     // eslint-disable-next-line no-unused-vars
     reviewGoodsComment
 } from '~/api/goodsComments.js'
+import { toast } from '~/utils/util.js'
 import Search from '~/components/Search.vue'
 import SearchItem from '~/components/SearchItem.vue'
 
@@ -138,12 +170,30 @@ const {
     onGetListSuccess: res => {
         tableData.value = res.list.map(o => {
             o.statusLoading = false
+            o.textareaEdit = false
             return o
         })
         total.value = res.totalCount
     },
     updateStatus: updateGoodsCommentStatus
 })
+const textarea = ref('')
+
+const openTextarea = (row, data = '') => {
+    textarea.value = data
+    row.textareaEdit = true
+}
+
+const review = data => {
+    if (textarea.value === '') {
+        return toast('请输入回复内容', 'error')
+    }
+    reviewGoodsComment(data.id, textarea.value).then(() => {
+        data.textareaEdit = false
+        toast('回复成功')
+        getData()
+    })
+}
 </script>
 
 <style scoped></style>
