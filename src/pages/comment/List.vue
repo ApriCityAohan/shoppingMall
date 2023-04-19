@@ -11,7 +11,7 @@
                 </SearchItem>
             </Search>
         </div>
-        <el-table v-loading="loading" :data="tableData" stripe style="width: 100%">
+        <el-table v-loading="loading" :data="tableData" row-key="id" stripe style="width: 100%">
             <el-table-column type="expand">
                 <template #default="{ row }">
                     <div class="flex pl-15">
