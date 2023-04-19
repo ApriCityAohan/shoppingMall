@@ -12,6 +12,50 @@
             </Search>
         </div>
         <el-table v-loading="loading" :data="tableData" stripe style="width: 100%">
+            <el-table-column type="expand">
+                <template #default="{ row }">
+                    <div class="flex pl-15">
+                        <el-avatar
+                            :size="50"
+                            :src="row.user.avatar"
+                            fit="fill"
+                            class="mr-3"
+                        ></el-avatar>
+                        <div class="flex-1">
+                            <h6 class="flex items-center">
+                                {{ row.user.username }}
+                                <small class="ml-2 text-gray-400">{{ row.review_time }}</small>
+                                <el-button size="small" class="ml-auto mr-1">回复</el-button>
+                            </h6>
+                            {{ row.review.data }}
+                            <div class="py-2">
+                                <el-image
+                                    v-for="(item, index) in row.review.image"
+                                    :key="index"
+                                    :src="item"
+                                    fit="cover"
+                                    :lazy="true"
+                                    style="width: 100px; height: 100px"
+                                    class="rounded"
+                                ></el-image>
+                            </div>
+                            <div
+                                v-for="(item, index) in row.extra"
+                                :key="index"
+                                class="bg-gray-100 p-3 rounded"
+                            >
+                                <h6 class="flex text-md font-bold">
+                                    客服
+                                    <el-button type="info" size="small" class="ml-auto">
+                                        修改
+                                    </el-button>
+                                </h6>
+                                <p>{{ item.data }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </el-table-column>
             <el-table-column prop="id" label="ID" width="70" align="center" />
             <el-table-column label="商品">
                 <template #default="{ row }">
