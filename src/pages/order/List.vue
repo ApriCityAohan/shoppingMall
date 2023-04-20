@@ -14,33 +14,19 @@
             <!-- 搜索 -->
             <div class="mb-3">
                 <Search :model="searchForm" @search="getData" @reset="handleResetSearch">
-                    <SearchItem label="关键字">
+                    <SearchItem label="订单编号">
                         <el-input
                             v-model="searchForm.title"
-                            placeholder="商品名称"
+                            placeholder="订单编号"
                             clearable
                         ></el-input>
                     </SearchItem>
                     <template #moreSearch>
-                        <SearchItem label="商品分类">
-                            <el-select
-                                v-model="searchForm.category_id"
-                                placeholder="请选择商品类别"
-                                clearable
-                            >
-                                <el-option
-                                    v-for="item in categoryList"
-                                    :key="item.id"
-                                    :label="item.name"
-                                    :value="item.id"
-                                >
-                                </el-option>
-                            </el-select>
-                        </SearchItem>
+                        <SearchItem label="商品分类"> </SearchItem>
                     </template>
                 </Search>
             </div>
-            <ListHeader layout="create,refresh" @create="handleAdd" @refresh="getData">
+            <ListHeader layout="refresh" @refresh="getData">
                 <el-button
                     v-if="searchForm.tab !== 'delete'"
                     type="danger"
@@ -192,7 +178,6 @@
 <script setup>
 import { ref } from 'vue'
 import { getOrderList, deleteOrder } from '~/api/order.js'
-import { getCategoryList } from '~/api/category'
 // eslint-disable-next-line no-unused-vars
 import Drawer from '~/components/Drawer.vue'
 import ListHeader from '~/components/ListHeader.vue'
@@ -219,9 +204,7 @@ const {
 } = initTableData({
     getListFun: getOrderList,
     searchForm: {
-        tab: 'all',
-        title: '',
-        category_id: null
+        tab: 'all'
     },
     onGetListSuccess: res => {
         tableData.value = res.list.map(o => {
@@ -270,9 +253,8 @@ const tabBars = ref([
     }
 ])
 // 下拉框数据
+// eslint-disable-next-line no-unused-vars
 const categoryList = ref([])
-// 获取分类列表
-getCategoryList().then(res => (categoryList.value = res))
 </script>
 
 <style scoped></style>
