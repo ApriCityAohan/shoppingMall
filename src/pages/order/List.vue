@@ -22,7 +22,30 @@
                         ></el-input>
                     </SearchItem>
                     <template #moreSearch>
-                        <SearchItem label="商品分类"> </SearchItem>
+                        <SearchItem label="收货人">
+                            <el-input v-model="searchForm.name" placeholder="收货人"></el-input>
+                        </SearchItem>
+                        <SearchItem label="手机号">
+                            <el-input v-model="searchForm.phone" placeholder="手机号"></el-input>
+                        </SearchItem>
+                        <SearchItem label="开始时间">
+                            <el-date-picker
+                                v-model="searchForm.starttime"
+                                type="date"
+                                placeholder="开始时间"
+                                value-format="YYYY-MM-DD"
+                            >
+                            </el-date-picker>
+                        </SearchItem>
+                        <SearchItem label="结束时间">
+                            <el-date-picker
+                                v-model="searchForm.endtime"
+                                type="date"
+                                placeholder="结束时间"
+                                value-format="YYYY-MM-DD"
+                            >
+                            </el-date-picker>
+                        </SearchItem>
                     </template>
                 </Search>
             </div>
