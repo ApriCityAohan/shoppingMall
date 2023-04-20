@@ -16,7 +16,7 @@
                 <Search :model="searchForm" @search="getData" @reset="handleResetSearch">
                     <SearchItem label="订单编号">
                         <el-input
-                            v-model="searchForm.title"
+                            v-model="searchForm.no"
                             placeholder="订单编号"
                             clearable
                         ></el-input>
@@ -44,120 +44,114 @@
                 @selection-change="handleSelectionChange"
             >
                 <el-table-column type="selection" width="55" />
-                <el-table-column label="商品" width="300">
+                <el-table-column label="商品">
                     <template #default="{ row }">
                         <div class="flex">
-                            <el-image
-                                :src="row.cover"
-                                fit="cover"
-                                :lazy="true"
-                                style="width: 50px; height: 50px"
-                                class="mr-3 rounded"
-                            ></el-image>
                             <div class="flex-1">
-                                <p>{{ row.title }}</p>
-                                <div>
-                                    <span class="text-rose-500">￥{{ row.min_price }}</span>
-                                    <el-divider direction="vertical" />
-                                    <span class="text-gray-500 text-xs">
-                                        ￥{{ row.min_oprice }}
-                                    </span>
-                                </div>
-                                <p class="text-xs mb-1 text-gray-400">
-                                    分类：{{ row.category ? row.category.name : '未分类' }}
-                                </p>
-                                <p class="text-xs text-gray-400">创建时间：{{ row.create_time }}</p>
+                                <p>订单号：</p>
+                                <small>{{ row.no }}</small>
+                            </div>
+                            <div class="flex-1">
+                                <p>下单时间：</p>
+                                <small>{{ row.create_time }}</small>
                             </div>
                         </div>
+                        <template v-for="(item, index) in row.order_items" :key="index">
+                            <div class="flex items-center py-2">
+                                <el-image
+                                    :src="item.goods_item ? item.goods_item.cover : ''"
+                                    fit="cover"
+                                    :lazy="true"
+                                    style="height: 30px; width: 30px"
+                                    class="mr-3 rounded"
+                                ></el-image>
+                                <p class="text-blue-500">
+                                    {{ item.goods_item?.title ?? '商品已被删除' }}
+                                </p>
+                            </div>
+                        </template>
                     </template>
                 </el-table-column>
-                <el-table-column label="实际销量" width="70" align="center" prop="sale_count" />
-                <el-table-column label="商品状态" width="100" align="center">
+                <el-table-column label="实付款" width="120" align="center" prop="total_price" />
+                <el-table-column label="买家" width="100" align="center">
                     <template #default="{ row }">
-                        <el-tag :type="row.status ? 'success' : 'danger'" size="small">
-                            {{ row.status ? '上架' : '仓库' }}
-                        </el-tag>
+                        <p>{{ row.user.username }}</p>
+                        <small>(用户ID：{{ row.user.id }})</small>
                     </template>
                 </el-table-column>
-                <el-table-column
-                    v-if="searchForm.tab !== 'delete'"
-                    label="审核状态"
-                    width="120"
-                    align="center"
-                >
+                <el-table-column label="交易状态" width="170">
                     <template #default="{ row }">
-                        <div v-if="row.ischeck === 0" class="flex flex-col">
-                            <el-button
+                        <div class="flex items-center">
+                            付款状态:
+                            <el-tag
+                                v-if="row.payment_method === 'wechat'"
                                 type="success"
-                                plain
                                 size="small"
-                                @click="handleAuditGoods(row.id, 1)"
-                                >审核通过</el-button
+                                >微信支付</el-tag
                             >
-                            <el-button
-                                type="danger"
-                                plain
-                                size="small"
-                                class="mt-2"
-                                style="margin-left: 0px !important"
-                                @click="handleAuditGoods(row.id, 2)"
-                            >
-                                审核拒绝
-                            </el-button>
+                            <el-tag v-else-if="row.payment_method === 'alipay'" size="small">
+                                支付宝支付
+                            </el-tag>
+                            <el-tag v-else type="info" size="small">未支付</el-tag>
                         </div>
-                        <span v-else>{{ row.ischeck === 1 ? '同意' : '拒绝' }}</span>
+                        <div class="flex items-center">
+                            发货状态:
+                            <el-tag :type="row.ship_data ? 'success' : 'info'" size="small">{{
+                                row.ship_data ? '已发货' : '未发货'
+                            }}</el-tag>
+                        </div>
+                        <div class="flex items-center">
+                            收货状态:
+                            <el-tag
+                                :type="row.ship_status === 'received' ? 'success' : 'info'"
+                                size="small"
+                            >
+                                {{ row.ship_status === 'received' ? '已收货' : '未收货' }}
+                            </el-tag>
+                        </div>
                     </template>
                 </el-table-column>
-                <el-table-column label="总库存" align="center" prop="stock" width="90" />
                 <el-table-column label="操作" align="right">
-                    <template #default="scope">
-                        <div v-if="searchForm.tab !== 'delete'">
-                            <el-button
-                                text
-                                type="primary"
-                                size="small"
-                                class="px-1"
-                                @click="handleEdit(scope.row)"
-                            >
-                                修改
-                            </el-button>
-                            <el-button
-                                text
-                                :type="
-                                    (scope.row.sku_type === 0 && !scope.row.sku_value) ||
-                                    (scope.row.sku_type === 1 && !scope.row.goods_skus.length)
-                                        ? 'danger'
-                                        : 'primary'
-                                "
-                                size="small"
-                                class="px-1"
-                                :loading="scope.row.skuLoading"
-                                @click="handleOpenSku(scope.row)"
-                            >
-                                商品规格
-                            </el-button>
-                            <el-button
-                                text
-                                :type="!scope.row.content ? 'danger' : 'primary'"
-                                size="small"
-                                class="px-1"
-                                :loading="scope.row.contentLoading"
-                                @click="handleOpenContent(scope.row)"
-                            >
-                                商品详情
-                            </el-button>
-                            <el-popconfirm
-                                title="是否要删除该商品?"
-                                confirm-button-text="确认"
-                                cancel-button-text="取消"
-                                @confirm="handleDelete(scope.row.id)"
-                            >
-                                <template #reference>
-                                    <el-button text type="primary" size="small">删除</el-button>
-                                </template>
-                            </el-popconfirm>
-                        </div>
-                        <span v-else class="text-sm"> 暂无操作 </span>
+                    <template #default="{ row }">
+                        <el-button
+                            text
+                            type="primary"
+                            size="small"
+                            class="px-1"
+                            @click="handleOpen(row)"
+                        >
+                            订单详情
+                        </el-button>
+                        <el-button
+                            v-if="searchForm.tab === 'noship'"
+                            text
+                            type="primary"
+                            size="small"
+                            class="px-1"
+                            @click="handleOpen(row)"
+                        >
+                            订单发货
+                        </el-button>
+                        <el-button
+                            v-if="searchForm.tab === 'refunding'"
+                            text
+                            type="primary"
+                            size="small"
+                            class="px-1"
+                            @click="handleOpen(row)"
+                        >
+                            同意退款
+                        </el-button>
+                        <el-button
+                            v-if="searchForm.tab === 'refunding'"
+                            text
+                            type="primary"
+                            size="small"
+                            class="px-1"
+                            @click="handleOpen(row)"
+                        >
+                            拒绝退款
+                        </el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -194,17 +188,18 @@ const {
     total,
     limit,
     getData,
-    handleDelete,
     multipleTableRef,
     handleSelectionChange,
-    handleMultiDelete,
-    handleAuditGoods,
-    // eslint-disable-next-line no-unused-vars
-    multiSelectionIds
+    handleMultiDelete
 } = initTableData({
     getListFun: getOrderList,
     searchForm: {
-        tab: 'all'
+        tab: 'all',
+        no: '',
+        starttime: '',
+        endtime: '',
+        name: '',
+        phone: null
     },
     onGetListSuccess: res => {
         tableData.value = res.list.map(o => {
@@ -252,9 +247,6 @@ const tabBars = ref([
         key: 'refunding'
     }
 ])
-// 下拉框数据
-// eslint-disable-next-line no-unused-vars
-const categoryList = ref([])
 </script>
 
 <style scoped></style>
