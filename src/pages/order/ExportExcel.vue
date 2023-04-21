@@ -67,7 +67,7 @@ const onSubmit = () => {
             const link = document.createElement('a')
             link.style.display = 'none'
             link.href = url
-            const filename = '订单列表.xlsx'
+            const filename = new Date().getTime() + '订单列表.xlsx'
             link.setAttribute('download', filename)
             document.body.appendChild(link)
             link.click()
