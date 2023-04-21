@@ -31,7 +31,6 @@
 </template>
 
 <script setup>
-// eslint-disable-next-line no-unused-vars
 import { ref, received } from 'vue'
 defineProps({
     tabs: {
