@@ -31,14 +31,14 @@
 </template>
 
 <script setup>
-import { ref, received } from 'vue'
+import { ref, reactive } from 'vue'
 defineProps({
     tabs: {
         type: Array,
         default: () => []
     }
 })
-const form = received({
+const form = reactive({
     tab: null,
     time: ''
 })
