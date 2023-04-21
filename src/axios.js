@@ -24,7 +24,7 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
     function (response) {
         // 对响应数据做点什么
-        return response.data.data
+        return response.request.responseType === 'blob' ? response.data : response.data.data
     },
     function (error) {
         const msg = error.response.data.msg || '网络错误'
