@@ -21,9 +21,14 @@
             </el-popconfirm>
             <slot />
         </div>
-        <el-button v-if="btn.includes('refresh')" text size="small" @click="$emit('refresh')">
-            <el-icon :size="20"><Refresh /></el-icon>
-        </el-button>
+        <div>
+            <el-button v-if="btn.includes('refresh')" text size="small" @click="$emit('refresh')">
+                <el-icon :size="15"><Refresh /></el-icon>
+            </el-button>
+            <el-button v-if="btn.includes('download')" text size="small" @click="$emit('download')">
+                <el-icon :size="15"><Download /></el-icon>
+            </el-button>
+        </div>
     </div>
 </template>
 
@@ -36,7 +41,7 @@ const props = defineProps({
     }
 })
 const btn = computed(() => props.layout.split(','))
-defineEmits(['create', 'refresh', 'delete'])
+defineEmits(['create', 'refresh', 'delete', 'download'])
 </script>
 
 <style scoped></style>

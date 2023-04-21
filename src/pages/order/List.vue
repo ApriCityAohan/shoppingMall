@@ -49,7 +49,7 @@
                     </template>
                 </Search>
             </div>
-            <ListHeader layout="refresh" @refresh="getData">
+            <ListHeader layout="refresh,download" @refresh="getData" @download="downloadFile">
                 <el-button
                     v-if="searchForm.tab !== 'delete'"
                     type="danger"
