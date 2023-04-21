@@ -10,5 +10,5 @@ export function deleteOrder(ids) {
 }
 export function exportOrder(query = {}) {
     const r = queryParse(query)
-    return axios.post(`/admin/order/excelexport${r}`)
+    return axios.post(`/admin/order/excelexport${r}`, {}, { responseType: 'blob' })
 }
