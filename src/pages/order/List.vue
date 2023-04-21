@@ -49,7 +49,7 @@
                     </template>
                 </Search>
             </div>
-            <ListHeader layout="refresh,download" @refresh="getData" @download="downloadFile">
+            <ListHeader layout="refresh,download" @refresh="getData" @download="handleExportExcel">
                 <el-button
                     v-if="searchForm.tab !== 'delete'"
                     type="danger"
@@ -189,17 +189,17 @@
                 />
             </div>
         </el-card>
+        <ExportExcel ref="exportExcelRef" :tabs="tabBars" />
     </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { getOrderList, deleteOrder } from '~/api/order.js'
-// eslint-disable-next-line no-unused-vars
-import Drawer from '~/components/Drawer.vue'
 import ListHeader from '~/components/ListHeader.vue'
 import Search from '~/components/Search.vue'
 import SearchItem from '~/components/SearchItem.vue'
+import ExportExcel from './ExportExcel.vue'
 
 import { initTableData } from '~/utils/useCommon.js'
 const {
@@ -270,6 +270,11 @@ const tabBars = ref([
         key: 'refunding'
     }
 ])
+
+const exportExcelRef = ref(null)
+const handleExportExcel = () => {
+    exportExcelRef.value.open()
+}
 </script>
 
 <style scoped></style>
