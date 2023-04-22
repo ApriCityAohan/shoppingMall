@@ -141,7 +141,7 @@
                             type="primary"
                             size="small"
                             class="px-1"
-                            @click="handleOpen(row)"
+                            @click="handleInfoModel(row)"
                         >
                             订单详情
                         </el-button>
@@ -190,6 +190,7 @@
             </div>
         </el-card>
         <ExportExcel ref="exportExcelRef" :tabs="tabBars" />
+        <InfoModel ref="infoModelRef" :info="info" />
     </div>
 </template>
 
@@ -200,6 +201,7 @@ import ListHeader from '~/components/ListHeader.vue'
 import Search from '~/components/Search.vue'
 import SearchItem from '~/components/SearchItem.vue'
 import ExportExcel from './ExportExcel.vue'
+import InfoModel from './InfoModel.vue'
 
 import { initTableData } from '~/utils/useCommon.js'
 const {
@@ -274,6 +276,13 @@ const tabBars = ref([
 const exportExcelRef = ref(null)
 const handleExportExcel = () => {
     exportExcelRef.value.open()
+}
+
+const infoModelRef = ref(null)
+const info = ref({})
+const handleInfoModel = row => {
+    info.value = row
+    infoModelRef.value.open(row)
 }
 </script>
 
