@@ -281,6 +281,16 @@ const handleExportExcel = () => {
 const infoModelRef = ref(null)
 const info = ref({})
 const handleInfoModel = row => {
+    row.order_items = row.order_items.map(o => {
+        if (o.skus_type === 1 && o.goods_skus) {
+            const s = []
+            for (const k in o.goods_skus.skus) {
+                s.push(o.goods_skus.skus[k].value)
+            }
+            o.sku = s.join(',')
+        }
+        return o
+    })
     info.value = row
     infoModelRef.value.open(row)
 }
