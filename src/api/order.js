@@ -12,3 +12,6 @@ export function exportOrder(query = {}) {
     const r = queryParse(query)
     return axios.post(`/admin/order/excelexport${r}`, {}, { responseType: 'blob' })
 }
+export function getOrderShip(id) {
+    return axios.get(`/admin/order/${id}/get_ship_info`)
+}
