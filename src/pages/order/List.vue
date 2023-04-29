@@ -161,7 +161,7 @@
                             type="primary"
                             size="small"
                             class="px-1"
-                            @click="handleOpen(row)"
+                            @click="handleRefund(row.id, 1)"
                         >
                             同意退款
                         </el-button>
@@ -171,7 +171,7 @@
                             type="primary"
                             size="small"
                             class="px-1"
-                            @click="handleOpen(row)"
+                            @click="handleRefund(row.id, 0)"
                         >
                             拒绝退款
                         </el-button>
@@ -196,13 +196,13 @@
 
 <script setup>
 import { ref } from 'vue'
-import { getOrderList, deleteOrder } from '~/api/order.js'
+import { getOrderList, deleteOrder, refundOrder } from '~/api/order.js'
+import { showToastBox, showPrompt, toast } from '~/utils/util.js'
 import ListHeader from '~/components/ListHeader.vue'
 import Search from '~/components/Search.vue'
 import SearchItem from '~/components/SearchItem.vue'
 import ExportExcel from './ExportExcel.vue'
 import InfoModel from './InfoModel.vue'
-
 import { initTableData } from '~/utils/useCommon.js'
 const {
     searchForm,
@@ -293,6 +293,21 @@ const handleInfoModel = row => {
     })
     info.value = row
     infoModelRef.value.open(row)
+}
+
+const handleRefund = (id, agree) => {
+    ;(agree ? showToastBox('是否要同意该订单退款?', '') : showPrompt('请输入拒绝的理由')).then(
+        ({ value }) => {
+            const data = { agree }
+            if (!agree) {
+                data.disagree_reason = value
+            }
+            refundOrder(id, data).then(() => {
+                getData()
+                toast('操作成功')
+            })
+        }
+    )
 }
 </script>
 
