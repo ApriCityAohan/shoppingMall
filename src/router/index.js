@@ -85,6 +85,12 @@ const routeVlaue = [
         meta: { title: '交易设置' }
     },
     {
+        path: '/setting/ship',
+        name: '/setting/ship',
+        component: () => import('~/pages/setting/ship.vue'),
+        meta: { title: '物流设置' }
+    },
+    {
         path: '/access/list',
         name: '/access/list',
         component: () => import('~/pages/access/List.vue'),
