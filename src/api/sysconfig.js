@@ -7,3 +7,6 @@ export function getSysConfig() {
 export function updateSysConfig() {
     return axios.post('/admin/sysconfig')
 }
+
+// 上传文件
+export const uploadAction = '/api/admin/sysconfig/upload'
