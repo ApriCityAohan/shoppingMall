@@ -79,6 +79,12 @@ const routeVlaue = [
         meta: { title: '设置列表' }
     },
     {
+        path: '/setting/buy',
+        name: '/setting/buy',
+        component: () => import('~/pages/setting/buy.vue'),
+        meta: { title: '交易设置' }
+    },
+    {
         path: '/access/list',
         name: '/access/list',
         component: () => import('~/pages/access/List.vue'),
