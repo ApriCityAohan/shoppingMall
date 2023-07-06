@@ -3,7 +3,7 @@ import { toast } from '~/utils/util'
 import { getToken } from '~/utils/auth'
 import store from '~/store'
 
-const instance = axios.create({ baseURL: '/api' })
+const instance = axios.create({ baseURL: import.meta.env.VITE_APP_BASE_API })
 // 添加请求拦截器
 instance.interceptors.request.use(
     function (config) {
